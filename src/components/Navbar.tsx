@@ -5,11 +5,11 @@ import { useState } from "react";
 import { ShoppingCart, Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
-  { label: "Our Team", href: "#our-team" },
-  { label: "Our Program", href: "#our-program" },
-  { label: "S-Cube Center", href: "#s-cube-center" },
-  { label: "Our Events", href: "#our-events" },
-  { label: "Store", href: "#store" },
+  { label: "Our Team", href: "/#our-team" }, // Tambahkan slash '/' agar bisa kembali ke home
+  { label: "Our Program", href: "/#our-program" },
+  { label: "S-Cube Center", href: "/#s-cube-center" },
+  { label: "Our Events", href: "/our-events" }, // <-- Ubah bagian ini
+  { label: "Store", href: "/#store" },
 ];
 
 export default function Navbar() {
