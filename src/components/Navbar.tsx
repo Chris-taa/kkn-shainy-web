@@ -7,7 +7,6 @@ import { ShoppingCart, Menu, X } from "lucide-react";
 const NAV_LINKS = [
   { label: "Our Team", href: "/#our-team" }, // Tambahkan slash '/' agar bisa kembali ke home
   { label: "Our Program", href: "/#our-program" },
-  { label: "S-Cube Center", href: "/#s-cube-center" },
   { label: "Our Events", href: "/our-events" }, // <-- Ubah bagian ini
   { label: "Store", href: "/#store" },
 ];
@@ -19,7 +18,7 @@ export default function Navbar() {
     // Mengubah "sticky" menjadi "fixed left-0 right-0" agar melayang di atas konten
     <header className="fixed left-0 right-0 top-4 z-50 mx-auto flex w-[92%] max-w-6xl items-center justify-between rounded-full border border-white/60 bg-white/70 px-4 py-2 shadow-[0_4px_20px_rgba(13,43,78,0.08)] backdrop-blur-md sm:px-6">
       {/* Logo */}
-      <a href="#" className="flex shrink-0 items-center gap-2">
+      <a href="" className="flex shrink-0 items-center gap-2">
         <Image
           src="/images/gambar_logo.png"
           alt="Hamkke Bareng logo"

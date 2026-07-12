@@ -4,6 +4,8 @@
   --color-navy: #0d2b4e;
   --color-sunny: #ffc93c;
   --color-sand: #f7e2b0;
+  --color-coral: #ff6f61;
+  --color-mint: #6fd6c4;
   --font-pixel: var(--font-pixel), monospace;
   --font-body: var(--font-body), sans-serif;
 }
@@ -15,4 +17,29 @@
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* ===== Neobrutalism utilities ===== */
+/* Border tebal + hard shadow offset (tanpa blur), khas neobrutalism */
+.neo-border {
+  border: 3px solid var(--color-navy);
+}
+.neo-shadow {
+  box-shadow: 6px 6px 0 0 var(--color-navy);
+}
+.neo-shadow-sm {
+  box-shadow: 4px 4px 0 0 var(--color-navy);
+}
+.neo-card {
+  border: 3px solid var(--color-navy);
+  box-shadow: 6px 6px 0 0 var(--color-navy);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.neo-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 0 var(--color-navy);
+}
+.neo-pill {
+  border: 3px solid var(--color-navy);
+  box-shadow: 4px 4px 0 0 var(--color-navy);
 }
