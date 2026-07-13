@@ -4,7 +4,12 @@ import { useState } from "react";
 import Image from "next/image";
 import EventCard from "./EventCard";
 import RegistrationModal from "./RegistrationModal";
-import { Starfish, Hibiscus, Shell, BubbleField } from "@/components/icons/SummerIcons";
+import {
+  Starfish,
+  Hibiscus,
+  Shell,
+  BubbleField,
+} from "@/components/icons/SummerIcons";
 
 type EventInfo = {
   title: string;
@@ -63,35 +68,24 @@ export default function OurEvents() {
           </h2>
         </div>
 
-        <div className="grid w-full grid-cols-1 gap-8 lg:grid-cols-2">
+        {/* PERUBAHAN DI SINI: Menggunakan Flexbox agar card otomatis ke tengah jika hanya ada 1 */}
+        <div className="flex w-full flex-col items-center justify-center gap-8 lg:flex-row lg:flex-wrap">
           {/* Card 1: Closing Ceremony — sekarang open, ada form pendaftaran */}
-          <EventCard
-            badgeText="CLOSING CEREMONY"
-            imageSrc="/images/closing.png"
-            imageAlt="Closing Ceremony Batch 2025"
-            title="Culture Exchange"
-            subtitle="Closing Ceremony Event"
-            eventDate="27 July 2026"
-            locationText={"Gedung Dome\nUniversitas Mataram"}
-            registeredCount="337 / 350 Registered"
-            buttonText="REGISTER"
-            buttonStatus="open"
-            onRegisterClick={() => setActiveEvent(closingCeremony)}
-          />
-
-          {/* Card 2: Volunteer Registration */}
-          <EventCard
-            badgeText="REGISTRATION"
-            imageSrc="/images/gambar_volunteer_registration.jpg"
-            imageAlt="Summer 2026 Volunteer Registration"
-            title="International Community Service Summer 2026"
-            subtitle="Open Recruitment"
-            eventDate="25 Feb - 5 March"
-            locationText="Register Now!"
-            buttonText="REGISTER"
-            buttonStatus="open"
-            onRegisterClick={() => setActiveEvent(volunteerRecruitment)}
-          />
+          <div className="w-full max-w-lg">
+            <EventCard
+              badgeText="CLOSING CEREMONY"
+              imageSrc="/images/closing.png"
+              imageAlt="Closing Ceremony Batch 2025"
+              title="Culture Exchange"
+              subtitle="Closing Ceremony Event"
+              eventDate="27 July 2026"
+              locationText={"Gedung Dome\nUniversitas Mataram"}
+              registeredCount="337 / 350 Registered"
+              buttonText="REGISTER"
+              buttonStatus="open"
+              onRegisterClick={() => setActiveEvent(closingCeremony)}
+            />
+          </div>
         </div>
       </div>
 

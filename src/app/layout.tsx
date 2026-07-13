@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Silkscreen, Baloo_2 } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import { CartProvider } from "@/context/CartContext";
 
 const pixelFont = Silkscreen({
   weight: ["400", "700"],
@@ -31,8 +32,10 @@ export default function RootLayout({
       <body
         className={`${pixelFont.variable} ${bodyFont.variable} font-body antialiased text-navy`}
       >
-        <Navbar />
-        <main>{children}</main>
+        <CartProvider>
+          <Navbar />
+          <main>{children}</main>
+        </CartProvider>
       </body>
     </html>
   );

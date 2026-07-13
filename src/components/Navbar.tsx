@@ -1,32 +1,34 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { ShoppingCart, Menu, X } from "lucide-react";
+import { useCart } from "@/context/CartContext";
 
 const NAV_LINKS = [
-  { label: "Our Team", href: "/#our-team" }, // Tambahkan slash '/' agar bisa kembali ke home
+  { label: "Our Team", href: "/#our-team" },
   { label: "Our Program", href: "/#our-program" },
-  { label: "Our Events", href: "/our-events" }, // <-- Ubah bagian ini
-  { label: "Store", href: "/#store" },
+  { label: "Our Events", href: "/our-events" },
+  { label: "Store", href: "/store" },
 ];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { totalItems } = useCart();
 
   return (
-    // Mengubah "sticky" menjadi "fixed left-0 right-0" agar melayang di atas konten
     <header className="fixed left-0 right-0 top-4 z-50 mx-auto flex w-[92%] max-w-6xl items-center justify-between rounded-full border border-white/60 bg-white/70 px-4 py-2 shadow-[0_4px_20px_rgba(13,43,78,0.08)] backdrop-blur-md sm:px-6">
       {/* Logo */}
-      <a href="" className="flex shrink-0 items-center gap-2">
+      <Link href="/" className="flex shrink-0 items-center gap-2">
         <Image
           src="/images/gambar_logo.png"
-          alt="Hamkke Bareng logo"
+          alt="Shainy logo"
           width={44}
           height={44}
           className="h-10 w-10 object-contain sm:h-11 sm:w-11"
         />
-      </a>
+      </Link>
 
       {/* Desktop nav */}
       <nav className="hidden items-center gap-8 lg:flex">
@@ -42,10 +44,18 @@ export default function Navbar() {
       </nav>
 
       {/* Cart (desktop) */}
-      <button className="hidden items-center gap-2 rounded-full bg-navy px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 lg:flex">
+      <Link
+        href="/cart"
+        className="relative hidden items-center gap-2 rounded-full bg-navy px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 lg:flex"
+      >
         <ShoppingCart size={16} />
         Cart
-      </button>
+        {totalItems > 0 && (
+          <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-coral text-xs font-bold text-white">
+            {totalItems > 9 ? "9+" : totalItems}
+          </span>
+        )}
+      </Link>
 
       {/* Mobile toggle */}
       <button
@@ -69,10 +79,19 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
-          <button className="mt-2 flex items-center justify-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white">
+          <Link
+            href="/cart"
+            onClick={() => setOpen(false)}
+            className="relative mt-2 flex items-center justify-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white"
+          >
             <ShoppingCart size={16} />
             Cart
-          </button>
+            {totalItems > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-coral text-xs font-bold text-white">
+                {totalItems > 9 ? "9+" : totalItems}
+              </span>
+            )}
+          </Link>
         </div>
       )}
     </header>

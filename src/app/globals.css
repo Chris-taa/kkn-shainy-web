@@ -6,8 +6,18 @@
   --color-sand: #f7e2b0;
   --color-coral: #ff6f61;
   --color-mint: #6fd6c4;
+  --color-sky: #4e8fcb;
   --font-pixel: var(--font-pixel), monospace;
   --font-body: var(--font-body), sans-serif;
+}
+
+/* Samain warna html/body dengan awal gradient halaman, supaya pas
+   efek overscroll bounce (scroll ditarik lewat batas atas/bawah) gak
+   kelihatan putih kosong. Sekalian matiin bounce-nya biar rapi. */
+html,
+body {
+  background-color: #dff3fb;
+  overscroll-behavior-y: none;
 }
 
 /* Sembunyikan scrollbar pada carousel week recap tapi tetap bisa discroll */
@@ -33,7 +43,9 @@
 .neo-card {
   border: 3px solid var(--color-navy);
   box-shadow: 6px 6px 0 0 var(--color-navy);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 .neo-card:hover {
   transform: translate(-3px, -3px);
