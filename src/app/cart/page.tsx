@@ -8,33 +8,14 @@ import {
   Plus,
   Trash2,
   ArrowLeft,
-  MessageCircle,
+  CreditCard,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatRupiah } from "@/lib/format";
 
-// Ganti nomor ini dengan WhatsApp admin Shainy (format: 62xxxxxxxxxxx, tanpa "+" atau "0" di depan)
-const ADMIN_WHATSAPP = "6281234567890";
-
 export default function CartPage() {
   const { items, removeItem, updateQuantity, totalPrice, clearCart } =
     useCart();
-
-  const checkoutMessage = () => {
-    const lines = items.map((item) => {
-      const variant = [item.design, item.color, item.size, item.material]
-        .filter(Boolean)
-        .join(", ");
-      return `- ${item.title}${variant ? ` (${variant})` : ""} x${item.quantity} — ${formatRupiah(
-        item.price * item.quantity
-      )}`;
-    });
-    return encodeURIComponent(
-      `Halo Shainy! Saya mau pesan:\n\n${lines.join("\n")}\n\nTotal: ${formatRupiah(
-        totalPrice
-      )}`
-    );
-  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[linear-gradient(180deg,#DFF3FB_0%,#F8F1DE_100%)] pb-16 pt-28">
@@ -73,7 +54,12 @@ export default function CartPage() {
           <>
             <div className="mt-6 flex flex-col gap-4">
               {items.map((item) => {
-                const variant = [item.design, item.color, item.size, item.material]
+                const variant = [
+                  item.design,
+                  item.color,
+                  item.size,
+                  item.material,
+                ]
                   .filter(Boolean)
                   .join(" · ");
 
@@ -167,18 +153,16 @@ export default function CartPage() {
                 </span>
               </div>
 
-              <a
-                href={`https://wa.me/${ADMIN_WHATSAPP}?text=${checkoutMessage()}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/checkout"
                 className="neo-shadow-sm mt-6 flex w-full items-center justify-center gap-2 rounded-full border-[3px] border-navy bg-mint px-6 py-3.5 font-body text-sm font-bold tracking-widest text-navy transition-transform hover:-translate-y-0.5 active:translate-y-0"
               >
-                <MessageCircle size={18} />
-                Checkout via WhatsApp
-              </a>
+                <CreditCard size={18} />
+                Lanjut ke Checkout
+              </Link>
               <p className="mt-3 text-center font-body text-xs text-navy/40">
-                Kamu akan diarahkan ke WhatsApp admin Shainy dengan detail
-                pesanan yang sudah terisi otomatis.
+                Pilih metode pembayaran dan upload bukti transfer di halaman
+                checkout.
               </p>
             </div>
           </>
