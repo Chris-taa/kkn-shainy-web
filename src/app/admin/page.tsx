@@ -2,7 +2,16 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, ExternalLink, Loader2, PackageOpen, X } from "lucide-react";
+import Image from "next/image";
+import {
+  LogOut,
+  ExternalLink,
+  Loader2,
+  PackageOpen,
+  X,
+  Eye,
+  ImageIcon,
+} from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { formatRupiah } from "@/lib/format";
 
@@ -10,6 +19,7 @@ type OrderItem = {
   title: string;
   quantity: number;
   price: number;
+  image?: string;
   design?: string;
   color?: string;
   size?: string;
@@ -41,6 +51,121 @@ const STATUS_LABEL: Record<Order["status"], string> = {
   rejected: "Rejected",
 };
 
+function OrderDetailModal({
+  order,
+  onClose,
+}: {
+  order: Order;
+  onClose: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-navy/50 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="neo-card max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-6 sm:p-8"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="font-pixel text-sm text-sunny [text-shadow:1px_1px_0_#0D2B4E]">
+              {order.order_id}
+            </p>
+            <p className="mt-1 font-body text-lg font-bold text-navy">
+              {order.nama}
+            </p>
+            <p className="font-body text-xs text-navy/50">
+              {order.no_hp} · {order.payment_method}
+            </p>
+            <p className="mt-0.5 font-body text-xs text-navy/40">
+              {new Date(order.created_at).toLocaleString("id-ID", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Tutup"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-[3px] border-navy bg-white text-navy"
+          >
+            <X size={16} />
+          </button>
+        </div>
+
+        <span
+          className={`neo-pill mt-3 inline-block rounded-full px-3 py-1 font-pixel text-[10px] ${STATUS_STYLE[order.status]}`}
+        >
+          {STATUS_LABEL[order.status]}
+        </span>
+
+        {/* Daftar item lengkap dengan gambar */}
+        <div className="mt-5 flex flex-col gap-3 border-t-[3px] border-dashed border-navy/15 pt-5">
+          {order.items.map((item, idx) => {
+            const variant = [item.design, item.color, item.size, item.material]
+              .filter(Boolean)
+              .join(" · ");
+
+            return (
+              <div
+                key={idx}
+                className="flex items-center gap-4 rounded-2xl border-[3px] border-navy/10 p-3"
+              >
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border-[3px] border-navy/15 bg-[linear-gradient(160deg,#DFF3FB_0%,#BFE0F5_100%)]">
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      width={64}
+                      height={64}
+                      className="h-full w-full object-contain"
+                    />
+                  ) : (
+                    <ImageIcon size={22} className="text-navy/30" />
+                  )}
+                </div>
+
+                <div className="flex-1">
+                  <p className="font-body text-sm font-bold text-navy">
+                    {item.title} <span className="text-navy/50">x{item.quantity}</span>
+                  </p>
+                  {variant && (
+                    <p className="font-body text-xs text-navy/60">{variant}</p>
+                  )}
+                </div>
+
+                <span className="shrink-0 font-body text-sm font-semibold text-navy">
+                  {formatRupiah(item.price * item.quantity)}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-4 flex items-center justify-between border-t-[3px] border-dashed border-navy/15 pt-4">
+          <span className="font-body text-sm font-bold text-navy">
+            Total: {formatRupiah(order.total_price)}
+          </span>
+          {order.proof_file_url && (
+            <a
+              href={order.proof_file_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 font-body text-xs font-semibold text-navy underline"
+            >
+              Lihat Bukti Bayar
+              <ExternalLink size={12} />
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminOrdersPage() {
   const router = useRouter();
   const [checking, setChecking] = useState(true);
@@ -50,6 +175,7 @@ export default function AdminOrdersPage() {
   const [filter, setFilter] = useState<"all" | Order["status"]>("all");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [detailOrder, setDetailOrder] = useState<Order | null>(null);
 
   const fetchOrders = useCallback(async () => {
     setLoadingOrders(true);
@@ -288,21 +414,32 @@ export default function AdminOrdersPage() {
                   })}
                 </div>
 
-                <div className="mt-3 flex items-center justify-between border-t-[3px] border-dashed border-navy/15 pt-3">
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t-[3px] border-dashed border-navy/15 pt-3">
                   <span className="font-body text-sm font-bold text-navy">
                     Total: {formatRupiah(order.total_price)}
                   </span>
-                  {order.proof_file_url && (
-                    <a
-                      href={order.proof_file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setDetailOrder(order)}
                       className="flex items-center gap-1 font-body text-xs font-semibold text-navy underline"
                     >
-                      Lihat Bukti Bayar
-                      <ExternalLink size={12} />
-                    </a>
-                  )}
+                      <Eye size={12} />
+                      Lihat Detail
+                    </button>
+                    {order.proof_file_url && (
+                      <a
+                        href={order.proof_file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 font-body text-xs font-semibold text-navy underline"
+                      >
+                        Lihat Bukti Bayar
+                        <ExternalLink size={12} />
+                      </a>
+                    )}
+                  </div>
                 </div>
 
                 {/* Ganti status */}
@@ -334,6 +471,13 @@ export default function AdminOrdersPage() {
           )}
         </div>
       </div>
+
+      {detailOrder && (
+        <OrderDetailModal
+          order={detailOrder}
+          onClose={() => setDetailOrder(null)}
+        />
+      )}
     </div>
   );
 }

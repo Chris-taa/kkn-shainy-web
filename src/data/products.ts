@@ -49,10 +49,10 @@ export const PRODUCTS: Product[] = [
     slug: "shirt",
     category: "shirt",
     categoryLabel: "SHIRT",
-    title: "ShaiTee — Kaos Official Shainy",
+    title: "ShaiTee — Kaos Official SHAini",
     price: 95000,
     description:
-      "Kaos official Shainy, tersedia 2 desain. Pilih bahan (24s/30s) dan warna sesuai selera — cek size chart sebelum pilih ukuran.",
+      "Kaos official SHAini, tersedia 2 desain. Pilih bahan (24s/30s) dan warna sesuai selera — cek size chart sebelum pilih ukuran.",
     designs: [
       {
         id: "shaitee-001",
@@ -77,10 +77,10 @@ export const PRODUCTS: Product[] = [
     slug: "totebag",
     category: "totebag",
     categoryLabel: "TOTEBAG",
-    title: "ShaiBag — Totebag Official Shainy",
+    title: "ShaiBag — Totebag Official SHAini",
     price: 60000,
     description:
-      "Totebag harian dengan desain official Shainy, tersedia 3 pilihan desain.",
+      "Totebag harian dengan desain official SHAini, tersedia 3 pilihan desain.",
     designs: [
       {
         id: "shaibag-001",
@@ -105,10 +105,10 @@ export const PRODUCTS: Product[] = [
     slug: "mug",
     category: "mug",
     categoryLabel: "MUG",
-    title: "ShaiMug — Mug Official Shainy",
+    title: "ShaiMug — Mug Official SHAini",
     price: 35000,
     description:
-      "Mug keramik dengan artwork Shainy, tersedia 2 pilihan desain.",
+      "Mug keramik dengan artwork SHAini, tersedia 2 pilihan desain.",
     designs: [
       {
         id: "shaimug-001",
@@ -128,18 +128,18 @@ export const PRODUCTS: Product[] = [
     slug: "tumbler",
     category: "tumbler",
     categoryLabel: "TUMBLER",
-    title: "Shainy — Tumbler Official",
+    title: "SHAini — Tumbler Official",
     price: 120000,
     description: "Botol minum stainless, tersedia 2 pilihan desain.",
     designs: [
       {
-        id: "shainy-001",
-        label: "Shainy 001",
+        id: "SHAini-001",
+        label: "SHAini 001",
         image: `${MERCH}/TUMBLER/TUMBLER 1.png`,
       },
       {
-        id: "shainy-002",
-        label: "Shainy 002",
+        id: "SHAini-002",
+        label: "SHAini 002",
         image: `${MERCH}/TUMBLER/TUMBLER 2.png`,
       },
     ],
@@ -150,14 +150,77 @@ export const PRODUCTS: Product[] = [
     slug: "keychain",
     category: "keychain",
     categoryLabel: "KEYCHAIN",
-    title: "Keychain Official Shainy",
+    title: "Keychain Official SHAini",
     price: 17000,
-    description: "Gantungan kunci akrilik, tersedia 25 pilihan desain.",
-    designs: Array.from({ length: 25 }, (_, i) => ({
-      id: `keychain-${String(i + 1).padStart(2, "0")}`,
-      label: `Keychain ${i + 1}`,
-      image: `${MERCH}/KEYCHAIN/Keychain ${i + 1}.png`,
-    })),
+    description: "Gantungan kunci akrilik, tersedia 26 pilihan desain.",
+    designs: [
+      { id: "banana", label: "Banana", image: `${MERCH}/KEYCHAIN/banana.png` },
+      {
+        id: "basic-korean",
+        label: "Basic Korean",
+        image: `${MERCH}/KEYCHAIN/Basic Korean.png`,
+      },
+      { id: "basic", label: "Basic", image: `${MERCH}/KEYCHAIN/basic.png` },
+      { id: "db-2", label: "DB 2", image: `${MERCH}/KEYCHAIN/DB 2.png` },
+      { id: "debe", label: "Debe", image: `${MERCH}/KEYCHAIN/debe.png` },
+      { id: "eps-2", label: "EPS 2", image: `${MERCH}/KEYCHAIN/EPS 2.png` },
+      { id: "eps", label: "EPS", image: `${MERCH}/KEYCHAIN/eps.png` },
+      { id: "jeruk", label: "Jeruk", image: `${MERCH}/KEYCHAIN/jeruk.png` },
+      { id: "jeruk2", label: "Jeruk 2", image: `${MERCH}/KEYCHAIN/jeruk2.png` },
+      { id: "kfb-2", label: "KFB 2", image: `${MERCH}/KEYCHAIN/KFB 2.png` },
+      { id: "kfb", label: "KFB", image: `${MERCH}/KEYCHAIN/kfb.png` },
+      { id: "kft-2", label: "KFT 2", image: `${MERCH}/KEYCHAIN/KFT 2.png` },
+      { id: "kft", label: "KFT", image: `${MERCH}/KEYCHAIN/kft.png` },
+      { id: "kiwi", label: "Kiwi", image: `${MERCH}/KEYCHAIN/kiwi.png` },
+      {
+        id: "lemon-01",
+        label: "Lemon 01",
+        image: `${MERCH}/KEYCHAIN/LEMON 01.png`,
+      },
+      { id: "lemon", label: "Lemon", image: `${MERCH}/KEYCHAIN/lemon.png` },
+      { id: "lemon2", label: "Lemon 2", image: `${MERCH}/KEYCHAIN/lemon2.png` },
+      {
+        id: "watermelon-fruit",
+        label: "Watermelon (Fruit)",
+        image: `${MERCH}/KEYCHAIN/materwelon.png`,
+      },
+      { id: "peach", label: "Peach", image: `${MERCH}/KEYCHAIN/peach.png` },
+      {
+        id: "scaredberry",
+        label: "Scaredberry",
+        image: `${MERCH}/KEYCHAIN/scaredberry.png`,
+      },
+      {
+        id: "SHAini-00",
+        label: "SHAini 00",
+        image: `${MERCH}/KEYCHAIN/Shainy 00.png`,
+      },
+      {
+        id: "SHAini-01",
+        label: "SHAini 01",
+        image: `${MERCH}/KEYCHAIN/Shainy 01.png`,
+      },
+      {
+        id: "SHAini-02",
+        label: "SHAini 02",
+        image: `${MERCH}/KEYCHAIN/Shainy 02.png`,
+      },
+      {
+        id: "sliced-kiwi",
+        label: "Sliced Kiwi",
+        image: `${MERCH}/KEYCHAIN/sliced kiwi.png`,
+      },
+      {
+        id: "stroberi",
+        label: "Stroberi",
+        image: `${MERCH}/KEYCHAIN/stroberi.png`,
+      },
+      {
+        id: "watermelon",
+        label: "Watermelon",
+        image: `${MERCH}/KEYCHAIN/WATERMELON.png`,
+      },
+    ],
   },
 
   // ============ PIN ============
@@ -165,7 +228,7 @@ export const PRODUCTS: Product[] = [
     slug: "pin",
     category: "pin",
     categoryLabel: "PIN",
-    title: "Pin Official Shainy",
+    title: "Pin Official SHAini",
     price: 15000,
     description: "Pin akrilik/emblem, tersedia 26 pilihan warna & desain.",
     designs: [
@@ -203,9 +266,9 @@ export const PRODUCTS: Product[] = [
     slug: "sticker",
     category: "sticker",
     categoryLabel: "STICKER",
-    title: "Sticker Official Shainy",
+    title: "Sticker Official SHAini",
     price: 12000,
-    description: "Sticker vinyl program Shainy, tersedia 6 pilihan desain.",
+    description: "Sticker vinyl program SHAini, tersedia 6 pilihan desain.",
     designs: [
       {
         id: "basic",
@@ -225,8 +288,8 @@ export const PRODUCTS: Product[] = [
         image: `${MERCH}/STICKER/KFT.png`,
       },
       {
-        id: "shainy-000",
-        label: "Shainy 000",
+        id: "SHAini-000",
+        label: "SHAini 000",
         image: `${MERCH}/STICKER/Shainy 000.png`,
       },
     ],
@@ -237,7 +300,7 @@ export const PRODUCTS: Product[] = [
     slug: "paper-bag",
     category: "paperbag",
     categoryLabel: "PAPER BAG",
-    title: "Paper Bag Shainy",
+    title: "Paper Bag SHAini",
     price: 3500,
     description: "Tas kertas buat bungkus belanjaan kamu, opsional.",
     designs: [{ id: "default", label: "Default", image: `${MERCH}/paper.png` }],
@@ -281,9 +344,9 @@ export const PRODUCTS: Product[] = [
         image: `${MERCH}/BUNDLE 2.png`,
       },
     ],
-    bundleItems: ["1x Tumbler (Shainy)", "1x Sticker", "1x Pin"],
+    bundleItems: ["1x Tumbler (SHAini)", "1x Sticker", "1x Pin"],
     bundleComponents: [
-      { productSlug: "tumbler", label: "Tumbler (Shainy)", quantity: 1 },
+      { productSlug: "tumbler", label: "Tumbler (SHAini)", quantity: 1 },
       { productSlug: "sticker", label: "Sticker", quantity: 1 },
       { productSlug: "pin", label: "Pin", quantity: 1 },
     ],
@@ -321,11 +384,11 @@ export const BUNDLE_PRODUCTS = PRODUCTS.filter((p) => p.category === "bundle");
 export const PAPER_BAG = PRODUCTS.find((p) => p.slug === "paper-bag")!;
 
 export const CATEGORY_COVER: Record<string, string> = {
-  shirt: `${MERCH}/SHIRT.png`,
-  totebag: `${MERCH}/TOTEBAG.png`,
-  mug: `${MERCH}/MUG.png`,
-  tumbler: `${MERCH}/TUMBLER.png`,
-  keychain: `${MERCH}/KEYCHAIN.png`,
-  pin: `${MERCH}/PIN.png`,
-  sticker: `${MERCH}/STICKER.png`,
+  shirt: `${MERCH}/SHIRTS.png`,
+  totebag: `${MERCH}/TOTEBAGS.png`,
+  mug: `${MERCH}/MUGS.png`,
+  tumbler: `${MERCH}/TUMBLERS.png`,
+  keychain: `${MERCH}/KEYCHAINS.png`,
+  pin: `${MERCH}/PINS.png`,
+  sticker: `${MERCH}/STICKERS.png`,
 };

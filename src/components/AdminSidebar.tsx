@@ -14,8 +14,8 @@ import {
 import { supabase } from "@/lib/supabaseClient";
 
 const MENU = [
-  { label: "Peserta Closing Ceremony", href: "/admin/peserta", icon: Users },
   { label: "Kelola Pesanan", href: "/admin", icon: PackageOpen },
+  { label: "Peserta Closing Ceremony", href: "/admin/peserta", icon: Users },
   { label: "Kelola Event", href: "/admin/events", icon: CalendarClock },
 ];
 
