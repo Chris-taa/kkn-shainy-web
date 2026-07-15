@@ -52,12 +52,12 @@ export const PRODUCTS: Product[] = [
       {
         id: "shaitee-001",
         label: "ShaiTee 001",
-        image: `${MERCH}/SHIRT/T-shirt 1.png`,
+        image: `${MERCH}/SHIRT/T-SHIRT 1.png`,
       },
       {
         id: "shaitee-002",
         label: "ShaiTee 002",
-        image: `${MERCH}/SHIRT/T-shirt 2.png`,
+        image: `${MERCH}/SHIRT/T-SHIRT 2.png`,
       },
     ],
     sizes: ["XS", "S", "M", "L", "XL", "XXL"],
