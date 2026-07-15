@@ -150,7 +150,7 @@ export const PRODUCTS: Product[] = [
     category: "keychain",
     categoryLabel: "KEYCHAIN",
     title: "Keychain Official Shainy",
-    price: 25000,
+    price: 17000,
     description: "Gantungan kunci akrilik, tersedia 25 pilihan desain.",
     designs: Array.from({ length: 25 }, (_, i) => ({
       id: `keychain-${String(i + 1).padStart(2, "0")}`,
@@ -165,7 +165,7 @@ export const PRODUCTS: Product[] = [
     category: "pin",
     categoryLabel: "PIN",
     title: "Pin Official Shainy",
-    price: 10000,
+    price: 15000,
     description: "Pin akrilik/emblem, tersedia 26 pilihan warna & desain.",
     designs: [
       { id: "blue1", label: "Blue 1", image: `${MERCH}/PIN/blue1.png` },
@@ -257,7 +257,7 @@ export const PRODUCTS: Product[] = [
       {
         id: "default",
         label: "Bundling A",
-        image: `${MERCH}/Bundling 1.jpeg`,
+        image: `${MERCH}/BUNDLE 1.png`,
       },
     ],
     bundleItems: ["1x T-Shirt (ShaiTee)", "1x Keychain", "1x Sticker"],
@@ -273,7 +273,7 @@ export const PRODUCTS: Product[] = [
       {
         id: "default",
         label: "Bundling B",
-        image: `${MERCH}/Bundling 2.jpeg`,
+        image: `${MERCH}/BUNDLE 2.png`,
       },
     ],
     bundleItems: ["1x Tumbler (Shainy)", "1x Sticker", "1x Pin"],
@@ -289,7 +289,7 @@ export const PRODUCTS: Product[] = [
       {
         id: "default",
         label: "Bundling C",
-        image: `${MERCH}/Bundling 3.jpeg`,
+        image: `${MERCH}/BUNDLE 3.png`,
       },
     ],
     bundleItems: ["1x Totebag (ShaiBag)", "1x Pin", "1x Keychain"],

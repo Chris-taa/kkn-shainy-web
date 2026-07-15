@@ -39,7 +39,7 @@ export default function Store() {
 
       <div className="relative z-20 flex flex-col items-center text-center">
         <p className="font-body text-xs font-semibold uppercase tracking-[0.3em] text-navy/60">
-          Shainy Merch
+          SHAini Merch
         </p>
         <h2 className="mt-2 font-pixel text-3xl leading-tight text-white [text-shadow:2px_2px_0_#0D2B4E] sm:text-4xl md:text-5xl">
           Shop Our

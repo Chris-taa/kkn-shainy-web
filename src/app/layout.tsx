@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Fredoka, Baloo_2 } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import ConditionalNavbar from "@/components/ConditionalNavbar";
 import { CartProvider } from "@/context/CartContext";
 
 const displayFont = Fredoka({
@@ -33,7 +33,7 @@ export default function RootLayout({
         className={`${displayFont.variable} ${bodyFont.variable} font-body antialiased text-navy`}
       >
         <CartProvider>
-          <Navbar />
+          <ConditionalNavbar />
           <main>{children}</main>
         </CartProvider>
       </body>

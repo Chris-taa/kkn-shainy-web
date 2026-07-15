@@ -22,7 +22,7 @@ export default function Navbar() {
       {/* Logo */}
       <Link href="/" className="flex shrink-0 items-center gap-2">
         <Image
-          src="/images/gambar_logo_unram.png"
+          src="/images/logo_nav.png"
           alt="Shainy logo"
           width={160}
           height={60}

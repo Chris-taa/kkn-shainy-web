@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Store from "@/components/Store";
 
 export const metadata: Metadata = {
-  title: "Store | SHAinni",
-  description: "Belanja merchandise resmi SHAinni — kaos, totebag, mug, dan keychain.",
+  title: "Store | SHAini",
+  description:
+    "Belanja merchandise resmi SHAini — kaos, totebag, mug, dan keychain.",
 };
 
 export default function StorePage() {

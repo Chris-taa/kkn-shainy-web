@@ -43,11 +43,11 @@ export default function Hero() {
         {/* Kolom teks */}
         <div className="relative flex flex-col justify-center">
           <span className="neo-pill mb-4 inline-block w-fit rounded-full bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-navy">
-            KKN International Summer Batch 2025
+            KKN International Summer Batch 2026
           </span>
 
           <h1 className="relative font-pixel text-4xl leading-[1.15] text-navy [text-shadow:2px_2px_0_#FFC93C,4px_4px_0_#0D2B4E1a] sm:text-5xl md:text-6xl">
-            SHAinni
+            SHAini
             <span className="relative block text-sky [text-shadow:2px_2px_0_#0D2B4E]">
               UNRAMTEAM
             </span>
@@ -55,7 +55,7 @@ export default function Hero() {
           </h1>
 
           <p className="mt-6 max-w-lg font-body text-sm leading-relaxed text-navy/80 sm:text-base">
-            SHAinni is a community service team under the collaboration with
+            SHAini is a community service team under the collaboration with
             SNU-SR, organized by six seventh-semester students united by a
             shared commitment to growth, collaboration, and social impact.
             Coming from diverse academic backgrounds and areas of expertise,
@@ -92,7 +92,7 @@ export default function Hero() {
           <div className="neo-shadow relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-t-full border-4 border-navy">
             <Image
               src="/images/gambar_tim_bareng.png"
-              alt="Tim SHAinni"
+              alt="Tim SHAini"
               fill
               className="object-cover"
             />
@@ -101,7 +101,7 @@ export default function Hero() {
           {/* Badge nama tim */}
           <div className="neo-shadow-sm absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full border-4 border-navy bg-sunny px-8 py-2">
             <span className="font-pixel text-lg text-white [text-shadow:1px_1px_0_#0D2B4E]">
-              SHAinni
+              SHAini
             </span>
           </div>
 

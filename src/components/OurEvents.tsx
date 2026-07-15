@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import EventCard from "./EventCard";
 import RegistrationModal from "./RegistrationModal";
+import { supabase } from "@/lib/supabaseClient"; // sesuaikan path client supabase-mu
 import {
   Starfish,
   Hibiscus,
@@ -17,36 +18,75 @@ type EventInfo = {
   location: string;
 };
 
+const CLOSING_CEREMONY_TITLE = "Culture Exchange — Closing Ceremony";
+const CLOSING_CEREMONY_CAPACITY = 350;
+
 export default function OurEvents() {
   const [activeEvent, setActiveEvent] = useState<EventInfo | null>(null);
+  const [registeredCount, setRegisteredCount] = useState<number | null>(null);
 
   const closingCeremony: EventInfo = {
-    title: "Culture Exchange — Closing Ceremony",
+    title: CLOSING_CEREMONY_TITLE,
     date: "27 July 2026",
     location: "Gedung Dome, Universitas Mataram",
   };
 
-  const volunteerRecruitment: EventInfo = {
-    title: "International Community Service Summer 2026",
-    date: "25 Feb - 5 March",
-    location: "Pendaftaran online",
-  };
+  useEffect(() => {
+    let isMounted = true;
+
+    async function fetchCount() {
+      const { count, error } = await supabase
+        .from("registrations")
+        .select("*", { count: "exact", head: true })
+        .eq("event_title", CLOSING_CEREMONY_TITLE);
+
+      if (!error && isMounted) {
+        setRegisteredCount(count ?? 0);
+      }
+    }
+
+    fetchCount();
+
+    // Opsional: realtime update tiap ada registrasi baru
+    const channel = supabase
+      .channel("registrations-count")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "registrations",
+          filter: `event_title=eq.${CLOSING_CEREMONY_TITLE}`,
+        },
+        () => {
+          fetchCount();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      isMounted = false;
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const registeredText =
+    registeredCount === null
+      ? "Loading..."
+      : `${registeredCount} / ${CLOSING_CEREMONY_CAPACITY} Registered`;
 
   return (
     <section
       id="our-events"
       className="relative mx-auto mt-10 w-[92%] max-w-6xl overflow-hidden rounded-[2.5rem] bg-[linear-gradient(160deg,#9FCBEF_0%,#6FA9DE_100%)] px-6 py-12 sm:px-10"
     >
-      {/* Dekorasi titik halus, senada dengan section lain */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-30 [background-image:radial-gradient(white_2px,transparent_2px)] [background-size:26px_26px]"
       />
 
-      {/* Gelembung ambient khas summer */}
       <BubbleField />
 
-      {/* Daun palem pojok kiri atas — ditaruh agak turun & kecil biar gak nabrak navbar mengambang */}
       <Image
         src="/images/gambar_daun_palem.png"
         alt=""
@@ -56,7 +96,6 @@ export default function OurEvents() {
         className="pointer-events-none absolute -left-4 top-2 z-0 w-16 opacity-90 sm:w-20"
       />
 
-      {/* Ikon pantai — semuanya ditaruh di area tengah-bawah section, jauh dari navbar */}
       <Starfish className="pointer-events-none absolute left-4 bottom-6 z-10 hidden w-11 -rotate-12 sm:block" />
       <Shell className="pointer-events-none absolute right-6 bottom-10 z-10 hidden w-11 rotate-6 sm:block" />
       <Hibiscus className="pointer-events-none absolute -right-3 top-1/2 z-10 hidden w-14 -translate-y-1/2 rotate-6 lg:block" />
@@ -68,9 +107,7 @@ export default function OurEvents() {
           </h2>
         </div>
 
-        {/* PERUBAHAN DI SINI: Menggunakan Flexbox agar card otomatis ke tengah jika hanya ada 1 */}
         <div className="flex w-full flex-col items-center justify-center gap-8 lg:flex-row lg:flex-wrap">
-          {/* Card 1: Closing Ceremony — sekarang open, ada form pendaftaran */}
           <div className="w-full max-w-lg">
             <EventCard
               badgeText="CLOSING CEREMONY"
@@ -80,7 +117,7 @@ export default function OurEvents() {
               subtitle="Closing Ceremony Event"
               eventDate="27 July 2026"
               locationText={"Gedung Dome\nUniversitas Mataram"}
-              registeredCount="337 / 350 Registered"
+              registeredCount={registeredText}
               buttonText="REGISTER"
               buttonStatus="open"
               onRegisterClick={() => setActiveEvent(closingCeremony)}
