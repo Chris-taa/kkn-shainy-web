@@ -254,7 +254,11 @@ export const PRODUCTS: Product[] = [
     description:
       "Paket hemat: 1 T-Shirt (pilih desain & bahan saat checkout via catatan), 1 Keychain, 1 Sticker.",
     designs: [
-      { id: "default", label: "Bundling A", image: `${MERCH}/bundling 1.jpeg` },
+      {
+        id: "default",
+        label: "Bundling A",
+        image: `${MERCH}/Merch/bundling 1.jpeg`,
+      },
     ],
     bundleItems: ["1x T-Shirt (ShaiTee)", "1x Keychain", "1x Sticker"],
   },
@@ -266,7 +270,11 @@ export const PRODUCTS: Product[] = [
     price: 137000,
     description: "Paket hemat: 1 Tumbler, 1 Sticker, 1 Pin.",
     designs: [
-      { id: "default", label: "Bundling B", image: `${MERCH}/bundling 2.jpeg` },
+      {
+        id: "default",
+        label: "Bundling B",
+        image: `${MERCH}/Merch/bundling 2.jpeg`,
+      },
     ],
     bundleItems: ["1x Tumbler (Shainy)", "1x Sticker", "1x Pin"],
   },
@@ -278,7 +286,11 @@ export const PRODUCTS: Product[] = [
     price: 82000,
     description: "Paket hemat: 1 Totebag, 1 Pin, 1 Keychain.",
     designs: [
-      { id: "default", label: "Bundling C", image: `${MERCH}/bundling 3.jpeg` },
+      {
+        id: "default",
+        label: "Bundling C",
+        image: `${MERCH}/Merch/bundling 3.jpeg`,
+      },
     ],
     bundleItems: ["1x Totebag (ShaiBag)", "1x Pin", "1x Keychain"],
   },
