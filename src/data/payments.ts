@@ -21,7 +21,7 @@ export const PAYMENT_METHODS: PaymentMethod[] = [
   {
     id: "bca",
     label: "BCA",
-    number: "0852106586",
+    number: "0562106586",
     holderName: "AYLIRA NATASYA SUSANTO",
   },
 ];
