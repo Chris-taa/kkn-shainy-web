@@ -17,7 +17,7 @@ const bodyFont = Baloo_2({
 });
 
 export const metadata: Metadata = {
-  title: "Website KKN Kolaborasi",
+  title: "Summer 2026",
   description:
     "Platform informasi, merchandise, dan pendaftaran acara penutupan.",
 };
