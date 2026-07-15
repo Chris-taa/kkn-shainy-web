@@ -18,11 +18,11 @@ type TeamMember = {
 // Urutan: [kiri-atas, tengah-atas, kanan-atas, kiri-bawah, tengah-bawah, kanan-bawah]
 const TEAM: TeamMember[] = [
   {
-    name: "M. Juniardi",
-    department: "Department of Informatics Engineering",
-    role: "Technical Lead",
-    photo: "/images/team/jun.png",
-    badge: "sky",
+    name: "Tiara Andriani Isnawati",
+    department: "Department of Food Science & Technology",
+    role: "Secretary",
+    photo: "/images/team/tya.png",
+    badge: "mint",
   },
   {
     name: "Christian Hadi Candra",
@@ -32,25 +32,25 @@ const TEAM: TeamMember[] = [
     badge: "coral",
   },
   {
-    name: "Linda Julivia",
-    department: "Department of Architecture",
-    role: "Creative Lead",
-    photo: "/images/team/lyn.png",
-    badge: "sky",
-  },
-  {
-    name: "Tiara Andriani Isnawati",
-    department: "Department of Food Science & Technology",
-    role: "Secretary",
-    photo: "/images/team/tya.png",
-    badge: "mint",
-  },
-  {
     name: "Aylira Natasha Susanto",
     department: "Department of Informatics Engineering",
     role: "Treasurer",
     photo: "/images/team/ay.png",
     badge: "sunny",
+  },
+  {
+    name: "M. Juniardi",
+    department: "Department of Informatics Engineering",
+    role: "Technical Lead",
+    photo: "/images/team/jun.png",
+    badge: "sky",
+  },
+  {
+    name: "Linda Julivia",
+    department: "Department of Architecture",
+    role: "Creative Lead",
+    photo: "/images/team/lyn.png",
+    badge: "sky",
   },
   {
     name: "Hendru Elban Anshori",
@@ -138,9 +138,8 @@ export default function OurTeam() {
         </h2>
 
         <p className="mx-auto mt-6 max-w-xl font-body text-sm leading-relaxed text-navy/80 sm:text-base">
-          Six seventh-semester students from diverse academic backgrounds,
-          united by a shared commitment to growth, collaboration, and social
-          impact.
+          Six sixth-semester students from diverse academic backgrounds, united
+          by a shared commitment to growth, collaboration, and social impact.
         </p>
 
         {/* Grid 3 kolom, kartu tengah lebih naik (efek zigzag/honeycomb) */}

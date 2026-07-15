@@ -65,7 +65,7 @@ export const PRODUCTS: Product[] = [
         image: `${MERCH}/SHIRT/T-SHIRT 2.png`,
       },
     ],
-    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    sizes: ["S", "M", "L", "XL", "XXL"],
     materials: [
       { id: "24s", label: "Cotton Combed 24s", price: 99000 },
       { id: "30s", label: "Cotton Combed 30s", price: 95000 },
