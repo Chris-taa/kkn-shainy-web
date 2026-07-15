@@ -257,7 +257,7 @@ export const PRODUCTS: Product[] = [
       {
         id: "default",
         label: "Bundling A",
-        image: `${MERCH}/Merch/bundling 1.jpeg`,
+        image: `${MERCH}/Bundling 1.jpeg`,
       },
     ],
     bundleItems: ["1x T-Shirt (ShaiTee)", "1x Keychain", "1x Sticker"],
@@ -273,7 +273,7 @@ export const PRODUCTS: Product[] = [
       {
         id: "default",
         label: "Bundling B",
-        image: `${MERCH}/Merch/bundling 2.jpeg`,
+        image: `${MERCH}/Bundling 2.jpeg`,
       },
     ],
     bundleItems: ["1x Tumbler (Shainy)", "1x Sticker", "1x Pin"],
@@ -289,7 +289,7 @@ export const PRODUCTS: Product[] = [
       {
         id: "default",
         label: "Bundling C",
-        image: `${MERCH}/Merch/bundling 3.jpeg`,
+        image: `${MERCH}/Bundling 3.jpeg`,
       },
     ],
     bundleItems: ["1x Totebag (ShaiBag)", "1x Pin", "1x Keychain"],
