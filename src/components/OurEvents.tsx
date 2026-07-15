@@ -63,7 +63,7 @@ export default function OurEvents() {
 
       <div className="relative z-20 flex flex-col items-center">
         <div className="neo-pill mb-10 rounded-full bg-white px-8 py-3">
-          <h2 className="font-pixel text-xl text-navy sm:text-2xl">
+          <h2 className="font-bold text-xl text-navy sm:text-2xl">
             Our Events
           </h2>
         </div>

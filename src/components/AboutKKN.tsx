@@ -17,7 +17,7 @@ export default function AboutKKN() {
       <div className="relative flex flex-col items-center">
         {/* Badge judul, neobrutalism: border tebal + hard shadow */}
         <div className="neo-pill mb-8 rounded-full bg-white px-8 py-3">
-          <h2 className="font-pixel text-xl text-navy sm:text-2xl">
+          <h2 className="font-pixel text-xl text-navy sm:text-2xl font-bold">
             What is KKN International?
           </h2>
         </div>

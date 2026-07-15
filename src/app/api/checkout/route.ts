@@ -25,10 +25,21 @@ function getDriveClient() {
 // Pakai service role key di sini (BUKAN anon key) karena ini jalan di server
 // dan perlu izin insert tanpa terhalang RLS. Jangan pernah expose service
 // role key ke client.
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-  process.env.SUPABASE_SERVICE_ROLE_KEY as string
-);
+// Dibuat lazy (bukan langsung di top-level module) supaya kalau env var
+// belum ke-set, itu cuma bikin request checkout gagal — bukan bikin
+// seluruh proses build Vercel gagal total.
+function getSupabaseAdmin() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !key) {
+    throw new Error(
+      "Env var Supabase belum lengkap: pastikan NEXT_PUBLIC_SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY sudah diisi (di .env.local untuk lokal, dan di Vercel Project Settings > Environment Variables untuk production)."
+    );
+  }
+
+  return createClient(url, key);
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -87,6 +98,7 @@ export async function POST(req: NextRequest) {
     const proofFileUrl = driveRes.data.webViewLink ?? null;
 
     // Simpan order ke Supabase
+    const supabaseAdmin = getSupabaseAdmin();
     const { error } = await supabaseAdmin.from("checkouts").insert({
       order_id: orderId,
       nama,

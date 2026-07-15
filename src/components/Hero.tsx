@@ -1,155 +1,13 @@
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
-
-/* ===================================================================
-   Ikon dekorasi summer — digambar langsung sebagai SVG (bukan file
-   gambar) supaya tidak pernah "broken image" dan gampang diberi efek
-   sticker/3D lewat drop-shadow keras (khas neobrutalism).
-   =================================================================== */
-
-function Starfish({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 64 64"
-      className={`drop-shadow-[3px_3px_0_#0D2B4E] ${className}`}
-      aria-hidden
-    >
-      <path
-        d="M32 2 L38 22 L58 14 L44 30 L62 38 L41 40 L46 60 L32 46 L18 60 L23 40 L2 38 L20 30 L6 14 L26 22 Z"
-        fill="#FFC93C"
-        stroke="#0D2B4E"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-      />
-      <circle cx="32" cy="32" r="3" fill="#0D2B4E" />
-    </svg>
-  );
-}
-
-function Hibiscus({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 64 64"
-      className={`drop-shadow-[3px_3px_0_#0D2B4E] ${className}`}
-      aria-hidden
-    >
-      {[0, 72, 144, 216, 288].map((deg) => (
-        <ellipse
-          key={deg}
-          cx="32"
-          cy="16"
-          rx="10"
-          ry="16"
-          fill="#FF6F61"
-          stroke="#0D2B4E"
-          strokeWidth="2.5"
-          transform={`rotate(${deg} 32 32)`}
-        />
-      ))}
-      <circle cx="32" cy="32" r="7" fill="#FFC93C" stroke="#0D2B4E" strokeWidth="2.5" />
-    </svg>
-  );
-}
-
-function Surfboard({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 40 140"
-      className={`drop-shadow-[3px_3px_0_#0D2B4E] ${className}`}
-      aria-hidden
-    >
-      <path
-        d="M20 2 C34 2 38 40 38 70 C38 100 34 138 20 138 C6 138 2 100 2 70 C2 40 6 2 20 2 Z"
-        fill="#6FD6C4"
-        stroke="#0D2B4E"
-        strokeWidth="2.5"
-      />
-      <path
-        d="M20 12 C20 50 20 90 20 128"
-        stroke="#0D2B4E"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M8 45 C20 40 20 40 32 45"
-        stroke="#FFC93C"
-        strokeWidth="4"
-        strokeLinecap="round"
-        fill="none"
-      />
-    </svg>
-  );
-}
-
-function SunBurst({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 64 64"
-      className={`drop-shadow-[3px_3px_0_#0D2B4E] ${className}`}
-      aria-hidden
-    >
-      <circle cx="32" cy="32" r="14" fill="#FFC93C" stroke="#0D2B4E" strokeWidth="2.5" />
-      {Array.from({ length: 8 }).map((_, i) => {
-        const angle = (i * 360) / 8;
-        return (
-          <rect
-            key={i}
-            x="30"
-            y="2"
-            width="4"
-            height="12"
-            rx="2"
-            fill="#FFC93C"
-            stroke="#0D2B4E"
-            strokeWidth="1.5"
-            transform={`rotate(${angle} 32 32)`}
-          />
-        );
-      })}
-    </svg>
-  );
-}
-
-function Sparkle({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden>
-      <path
-        d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"
-        fill="#FFC93C"
-      />
-    </svg>
-  );
-}
-
-/* Gelembung "summer" digambar pakai div bulat + gradient, bukan file gambar */
-function BubbleField() {
-  const bubbles = [
-    { top: "8%", left: "6%", size: 18, opacity: 0.5 },
-    { top: "18%", left: "42%", size: 10, opacity: 0.4 },
-    { top: "30%", left: "70%", size: 14, opacity: 0.5 },
-    { top: "55%", left: "12%", size: 12, opacity: 0.4 },
-    { top: "70%", left: "88%", size: 20, opacity: 0.35 },
-    { top: "85%", left: "35%", size: 9, opacity: 0.45 },
-    { top: "40%", left: "92%", size: 8, opacity: 0.4 },
-  ];
-  return (
-    <div className="pointer-events-none absolute inset-0 z-10" aria-hidden>
-      {bubbles.map((b, i) => (
-        <span
-          key={i}
-          className="absolute rounded-full bg-white/70 shadow-inner"
-          style={{
-            top: b.top,
-            left: b.left,
-            width: b.size,
-            height: b.size,
-            opacity: b.opacity,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
+import {
+  Starfish,
+  Hibiscus,
+  Surfboard,
+  SunBurst,
+  Sparkle,
+  BubbleField,
+} from "@/components/icons/SummerIcons";
 
 export default function Hero() {
   return (
@@ -190,21 +48,8 @@ export default function Hero() {
 
           <h1 className="relative font-pixel text-4xl leading-[1.15] text-navy [text-shadow:2px_2px_0_#FFC93C,4px_4px_0_#0D2B4E1a] sm:text-5xl md:text-6xl">
             Shainy
-            <span className="relative inline-block text-sunny [text-shadow:2px_2px_0_#0D2B4E]">
-              kita bareng!
-              <svg
-                viewBox="0 0 300 20"
-                className="absolute -bottom-2 left-0 w-full text-navy"
-                aria-hidden
-              >
-                <path
-                  d="M2 12 C 60 2, 120 18, 180 8 S 260 4, 298 14"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-              </svg>
+            <span className="relative block text-sky [text-shadow:2px_2px_0_#0D2B4E]">
+              UNRAMTEAM
             </span>
             <Sparkle className="absolute -right-8 top-0 h-6 w-6 sm:-right-10 sm:h-8 sm:w-8" />
           </h1>

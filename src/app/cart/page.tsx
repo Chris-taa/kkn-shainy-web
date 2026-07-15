@@ -9,13 +9,34 @@ import {
   Trash2,
   ArrowLeft,
   CreditCard,
+  Package,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatRupiah } from "@/lib/format";
+import { PAPER_BAG } from "@/data/products";
+
+const PAPER_BAG_ITEM_ID = "paper-bag-addon";
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, totalPrice, clearCart } =
+  const { items, addItem, removeItem, updateQuantity, totalPrice, clearCart } =
     useCart();
+
+  const displayItems = items.filter((i) => i.id !== PAPER_BAG_ITEM_ID);
+  const paperBagInCart = items.some((i) => i.id === PAPER_BAG_ITEM_ID);
+
+  const togglePaperBag = () => {
+    if (paperBagInCart) {
+      removeItem(PAPER_BAG_ITEM_ID);
+    } else {
+      addItem({
+        id: PAPER_BAG_ITEM_ID,
+        slug: PAPER_BAG.slug,
+        title: PAPER_BAG.title,
+        image: PAPER_BAG.designs[0].image,
+        price: PAPER_BAG.price,
+      });
+    }
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[linear-gradient(180deg,#DFF3FB_0%,#F8F1DE_100%)] pb-16 pt-28">
@@ -37,7 +58,7 @@ export default function CartPage() {
           Keranjang Kamu
         </h1>
 
-        {items.length === 0 ? (
+        {displayItems.length === 0 ? (
           <div className="neo-card mt-6 flex flex-col items-center gap-3 rounded-3xl bg-white px-6 py-16 text-center">
             <ShoppingBag size={40} className="text-navy/30" />
             <p className="font-body text-sm font-semibold text-navy/60">
@@ -53,7 +74,7 @@ export default function CartPage() {
         ) : (
           <>
             <div className="mt-6 flex flex-col gap-4">
-              {items.map((item) => {
+              {displayItems.map((item) => {
                 const variant = [
                   item.design,
                   item.color,
@@ -133,6 +154,47 @@ export default function CartPage() {
                 );
               })}
             </div>
+
+            {/* Add-on: Paper Bag */}
+            <button
+              type="button"
+              onClick={togglePaperBag}
+              className="neo-card mt-4 flex w-full items-center justify-between gap-3 rounded-2xl bg-white p-4 text-left"
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-[3px] border-navy ${
+                    paperBagInCart ? "bg-mint" : "bg-white"
+                  }`}
+                >
+                  {paperBagInCart && (
+                    <svg
+                      viewBox="0 0 16 16"
+                      className="h-3.5 w-3.5"
+                      aria-hidden
+                    >
+                      <path
+                        d="M2 8 L6 12 L14 3"
+                        stroke="#0D2B4E"
+                        strokeWidth="2.5"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Package size={18} className="text-navy/60" />
+                  <span className="font-body text-sm font-semibold text-navy">
+                    Tambah Paper Bag?
+                  </span>
+                </div>
+              </div>
+              <span className="font-body text-sm font-bold text-navy/70">
+                + {formatRupiah(PAPER_BAG.price)}
+              </span>
+            </button>
 
             <button
               type="button"

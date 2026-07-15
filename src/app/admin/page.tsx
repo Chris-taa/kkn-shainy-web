@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, ExternalLink, Loader2, PackageOpen } from "lucide-react";
+import { LogOut, ExternalLink, Loader2, PackageOpen, X } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { formatRupiah } from "@/lib/format";
 
@@ -48,6 +48,8 @@ export default function AdminOrdersPage() {
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | Order["status"]>("all");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const fetchOrders = useCallback(async () => {
     setLoadingOrders(true);
@@ -62,7 +64,6 @@ export default function AdminOrdersPage() {
     setLoadingOrders(false);
   }, []);
 
-  // Cek sesi login, redirect ke /admin/login kalau belum login
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       if (!data.session) {
@@ -102,6 +103,11 @@ export default function AdminOrdersPage() {
     router.replace("/admin/login");
   };
 
+  const resetDateFilter = () => {
+    setStartDate("");
+    setEndDate("");
+  };
+
   if (checking) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[linear-gradient(180deg,#DFF3FB_0%,#F8F1DE_100%)]">
@@ -110,13 +116,32 @@ export default function AdminOrdersPage() {
     );
   }
 
-  const filteredOrders =
-    filter === "all" ? orders : orders.filter((o) => o.status === filter);
+  const filteredOrders = orders.filter((o) => {
+    if (filter !== "all" && o.status !== filter) return false;
+
+    const orderDate = new Date(o.created_at);
+    orderDate.setHours(0, 0, 0, 0);
+
+    if (startDate) {
+      const start = new Date(startDate);
+      start.setHours(0, 0, 0, 0);
+      if (orderDate < start) return false;
+    }
+
+    if (endDate) {
+      const end = new Date(endDate);
+      end.setHours(0, 0, 0, 0);
+      if (orderDate > end) return false;
+    }
+
+    return true;
+  });
 
   const pendingCount = orders.filter((o) => o.status === "pending").length;
+  const isDateFilterActive = Boolean(startDate || endDate);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[linear-gradient(180deg,#DFF3FB_0%,#F8F1DE_100%)] pb-16 pt-24">
+    <div className="relative min-h-screen overflow-hidden bg-[linear-gradient(180deg,#DFF3FB_0%,#F8F1DE_100%)] pb-16 pt-10">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-40 [background-image:radial-gradient(#9FCBEF_1.5px,transparent_1.5px)] [background-size:24px_24px]"
@@ -156,6 +181,46 @@ export default function AdminOrdersPage() {
               {f === "all" ? "Semua" : STATUS_LABEL[f]}
             </button>
           ))}
+        </div>
+
+        {/* Filter tanggal */}
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-2 rounded-full border-[3px] border-navy bg-white px-3 py-1.5">
+            <label className="font-body text-xs font-semibold text-navy/50">
+              Dari
+            </label>
+            <input
+              type="date"
+              value={startDate}
+              max={endDate || undefined}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="bg-transparent font-body text-xs font-semibold text-navy outline-none"
+            />
+          </div>
+
+          <div className="flex items-center gap-2 rounded-full border-[3px] border-navy bg-white px-3 py-1.5">
+            <label className="font-body text-xs font-semibold text-navy/50">
+              Sampai
+            </label>
+            <input
+              type="date"
+              value={endDate}
+              min={startDate || undefined}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="bg-transparent font-body text-xs font-semibold text-navy outline-none"
+            />
+          </div>
+
+          {isDateFilterActive && (
+            <button
+              type="button"
+              onClick={resetDateFilter}
+              className="flex items-center gap-1 rounded-full border-[3px] border-navy bg-coral px-3 py-1.5 font-body text-xs font-semibold text-white"
+            >
+              <X size={14} />
+              Reset Tanggal
+            </button>
+          )}
         </div>
 
         {/* List order */}

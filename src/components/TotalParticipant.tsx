@@ -10,13 +10,13 @@ export default function TotalParticipant() {
 
       <div className="relative flex flex-col items-center">
         <div className="neo-pill mb-8 rounded-full bg-white px-8 py-3">
-          <h2 className="font-pixel text-xl text-navy sm:text-2xl">
+          <h2 className="text-xl text-navy sm:text-2xl font-bold">
             Total Participant
           </h2>
         </div>
 
         <div className="neo-card relative w-full max-w-3xl rounded-3xl bg-white/95 px-6 py-12 text-center sm:px-16">
-          <p className="font-pixel text-5xl text-sunny [text-shadow:2px_2px_0_#0D2B4E] sm:text-6xl">
+          <p className="text-5xl text-sunny [text-shadow:2px_2px_0_#0D2B4E] sm:text-6xl">
             170+
           </p>
           <p className="mt-3 font-body text-xl font-bold text-navy sm:text-2xl">

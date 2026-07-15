@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Silkscreen, Baloo_2 } from "next/font/google";
+import { Fredoka, Baloo_2 } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { CartProvider } from "@/context/CartContext";
 
-const pixelFont = Silkscreen({
-  weight: ["400", "700"],
+const displayFont = Fredoka({
+  weight: ["500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-pixel",
 });
@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body
-        className={`${pixelFont.variable} ${bodyFont.variable} font-body antialiased text-navy`}
+        className={`${displayFont.variable} ${bodyFont.variable} font-body antialiased text-navy`}
       >
         <CartProvider>
           <Navbar />

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function StorePage() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[linear-gradient(180deg,#DFF3FB_0%,#F8F1DE_100%)] pb-4 pt-28">
+    <div className="font-bold relative min-h-screen overflow-hidden bg-[linear-gradient(180deg,#DFF3FB_0%,#F8F1DE_100%)] pb-4 pt-28">
       {/* Tekstur titik halus, konsisten dengan halaman utama */}
       <div
         aria-hidden

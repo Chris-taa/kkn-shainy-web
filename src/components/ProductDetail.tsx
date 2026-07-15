@@ -3,7 +3,15 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ShoppingCart, Minus, Plus, Check } from "lucide-react";
+import {
+  ArrowLeft,
+  ShoppingCart,
+  Minus,
+  Plus,
+  Check,
+  ImageIcon,
+  PackageCheck,
+} from "lucide-react";
 import type { Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { formatRupiah } from "@/lib/format";
@@ -13,13 +21,22 @@ export default function ProductDetail({ product }: { product: Product }) {
   const [designId, setDesignId] = useState(product.designs[0].id);
   const [color, setColor] = useState(product.colors?.[0] ?? "");
   const [size, setSize] = useState(product.sizes?.[0] ?? "");
-  const [materialId, setMaterialId] = useState(product.materials?.[0]?.id ?? "");
+  const [materialId, setMaterialId] = useState(
+    product.materials?.[0]?.id ?? "",
+  );
   const [quantity, setQuantity] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
 
   const activeDesign =
     product.designs.find((d) => d.id === designId) ?? product.designs[0];
   const activeMaterial = product.materials?.find((m) => m.id === materialId);
+
+  // Kalau produk punya varian bahan (misal Shirt: 24s/30s), harga ngikut
+  // bahan yang dipilih. Kalau enggak, ya harga dasar produk.
+  const activePrice = activeMaterial ? activeMaterial.price : product.price;
+
+  const isBundle = product.category === "bundle";
 
   const handleAddToCart = () => {
     const variantId = [product.slug, designId, color, size, materialId]
@@ -34,13 +51,13 @@ export default function ProductDetail({ product }: { product: Product }) {
         slug: product.slug,
         title: product.title,
         image: activeDesign.image,
-        price: product.price,
-        design: activeDesign.label,
+        price: activePrice,
+        design: product.designs.length > 1 ? activeDesign.label : undefined,
         color: color || undefined,
         size: size || undefined,
         material: activeMaterial?.label,
       },
-      quantity
+      quantity,
     );
 
     setJustAdded(true);
@@ -58,15 +75,26 @@ export default function ProductDetail({ product }: { product: Product }) {
       </Link>
 
       <div className="neo-card grid grid-cols-1 overflow-hidden rounded-[2rem] bg-white lg:grid-cols-2">
-        {/* Gambar desain aktif */}
-        <div className="relative flex h-72 items-center justify-center border-b-[3px] border-navy bg-[linear-gradient(160deg,#DFF3FB_0%,#BFE0F5_100%)] p-8 sm:h-96 lg:h-auto lg:border-b-0 lg:border-r-[3px]">
-          <Image
-            src={activeDesign.image}
-            alt={`${product.title} - ${activeDesign.label}`}
-            width={360}
-            height={360}
-            className="max-h-full w-auto object-contain"
-          />
+        {/* Gambar desain aktif, dengan fallback kalau file belum ada */}
+        <div className="relative flex h-72 items-center justify-center border-b-[3px] border-navy bg-[linear-gradient(160deg,#DFF3FB_0%,#BFE0F5_100%)] p-4 sm:h-96 lg:h-auto lg:border-b-0 lg:border-r-[3px]">
+          {imgFailed ? (
+            <div className="flex flex-col items-center gap-2 text-navy/40">
+              <ImageIcon size={40} strokeWidth={1.75} />
+              <span className="font-body text-xs font-semibold">
+                Foto menyusul
+              </span>
+            </div>
+          ) : (
+            <Image
+              key={activeDesign.image}
+              src={activeDesign.image}
+              alt={`${product.title} - ${activeDesign.label}`}
+              width={360}
+              height={360}
+              className="max-h-full w-auto object-contain"
+              onError={() => setImgFailed(true)}
+            />
+          )}
         </div>
 
         {/* Info & pemilih varian */}
@@ -80,44 +108,64 @@ export default function ProductDetail({ product }: { product: Product }) {
             {product.title}
           </h1>
           <p className="mt-2 font-pixel text-2xl text-sunny [text-shadow:2px_2px_0_#0D2B4E]">
-            {formatRupiah(product.price)}
+            {formatRupiah(activePrice)}
           </p>
           <p className="mt-3 font-body text-sm text-navy/70">
             {product.description}
           </p>
 
-          {/* Pilihan desain */}
-          <div className="mt-6">
-            <p className="font-body text-xs font-semibold uppercase tracking-wide text-navy/60">
-              Design
-            </p>
-            <div className="mt-2 flex flex-wrap gap-3">
-              {product.designs.map((d) => (
-                <button
-                  key={d.id}
-                  type="button"
-                  onClick={() => setDesignId(d.id)}
-                  aria-label={d.label}
-                  className={`overflow-hidden rounded-xl border-[3px] transition-transform ${
-                    d.id === designId
-                      ? "neo-shadow-sm -translate-y-0.5 border-navy"
-                      : "border-navy/30"
-                  }`}
-                >
-                  <Image
-                    src={d.image}
-                    alt={d.label}
-                    width={64}
-                    height={64}
-                    className="h-16 w-16 object-cover"
-                  />
-                </button>
+          {/* Isi paket, khusus produk bundling */}
+          {isBundle && product.bundleItems && (
+            <div className="mt-4 flex flex-col gap-1.5 rounded-2xl border-[3px] border-dashed border-navy/30 bg-sand/20 p-4">
+              {product.bundleItems.map((item) => (
+                <div key={item} className="flex items-center gap-2">
+                  <PackageCheck size={16} className="shrink-0 text-navy/60" />
+                  <span className="font-body text-sm text-navy">{item}</span>
+                </div>
               ))}
             </div>
-            <p className="mt-1.5 font-body text-xs text-navy/50">
-              {activeDesign.label}
-            </p>
-          </div>
+          )}
+
+          {/* Pilihan desain — disembunyiin kalau cuma ada 1 opsi (misal bundling/paper bag) */}
+          {product.designs.length > 1 && (
+            <div className="mt-6">
+              <p className="font-body text-xs font-semibold uppercase tracking-wide text-navy/60">
+                Design
+              </p>
+              <div className="mt-2 flex max-h-40 flex-wrap gap-3 overflow-y-auto pr-1">
+                {product.designs.map((d) => (
+                  <button
+                    key={d.id}
+                    type="button"
+                    onClick={() => {
+                      setDesignId(d.id);
+                      setImgFailed(false);
+                    }}
+                    aria-label={d.label}
+                    className={`overflow-hidden rounded-xl border-[3px] transition-transform ${
+                      d.id === designId
+                        ? "neo-shadow-sm -translate-y-0.5 border-navy"
+                        : "border-navy/30"
+                    }`}
+                  >
+                    <Image
+                      src={d.image}
+                      alt={d.label}
+                      width={56}
+                      height={56}
+                      className="h-14 w-14 object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.opacity = "0.15";
+                      }}
+                    />
+                  </button>
+                ))}
+              </div>
+              <p className="mt-1.5 font-body text-xs text-navy/50">
+                {activeDesign.label}
+              </p>
+            </div>
+          )}
 
           {/* Pilihan warna — cuma muncul kalau produk punya varian warna */}
           {product.colors && (
@@ -145,9 +193,19 @@ export default function ProductDetail({ product }: { product: Product }) {
           {/* Pilihan ukuran */}
           {product.sizes && (
             <div className="mt-5">
-              <p className="font-body text-xs font-semibold uppercase tracking-wide text-navy/60">
-                Ukuran
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="font-body text-xs font-semibold uppercase tracking-wide text-navy/60">
+                  Ukuran
+                </p>
+                <a
+                  href={`${product.designs[0]?.image.split("/").slice(0, -1).join("/")}/sizechart.jpg`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-body text-xs font-semibold text-sky underline"
+                >
+                  Lihat size chart
+                </a>
+              </div>
               <div className="mt-2 flex flex-wrap gap-2">
                 {product.sizes.map((s) => (
                   <button
@@ -165,7 +223,7 @@ export default function ProductDetail({ product }: { product: Product }) {
             </div>
           )}
 
-          {/* Pilihan bahan */}
+          {/* Pilihan bahan — harga berubah ngikut ini */}
           {product.materials && (
             <div className="mt-5">
               <p className="font-body text-xs font-semibold uppercase tracking-wide text-navy/60">
@@ -183,7 +241,7 @@ export default function ProductDetail({ product }: { product: Product }) {
                         : "bg-white text-navy"
                     }`}
                   >
-                    {m.label}
+                    {m.label} · {formatRupiah(m.price)}
                   </button>
                 ))}
               </div>

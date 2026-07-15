@@ -117,7 +117,7 @@ export default function OurProgram() {
 
       <div className="relative flex flex-col items-center">
         <div className="neo-pill mb-14 rounded-full bg-white px-8 py-3">
-          <h2 className="font-pixel text-xl text-navy sm:text-2xl">
+          <h2 className="font-pixel text-xl text-navy sm:text-2xl font-bold = ">
             Our Program
           </h2>
         </div>

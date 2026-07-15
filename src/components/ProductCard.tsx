@@ -6,7 +6,17 @@ import { useState } from "react";
 import { ImageIcon } from "lucide-react";
 import { Sparkle } from "@/components/icons/SummerIcons";
 
-type Category = "shirt" | "totebag" | "mug" | "keychain" | "tumbler" | "other";
+type Category =
+  | "shirt"
+  | "totebag"
+  | "mug"
+  | "keychain"
+  | "tumbler"
+  | "pin"
+  | "sticker"
+  | "paperbag"
+  | "bundle"
+  | "other";
 
 type ProductCardProps = {
   category: Category;
@@ -15,6 +25,8 @@ type ProductCardProps = {
   imageAlt: string;
   title: string;
   price: string;
+  /** Kalau true, tampilin "Mulai dari" sebelum harga (buat produk dengan varian harga beda-beda) */
+  startingFrom?: boolean;
   description: string;
   href?: string;
 };
@@ -25,6 +37,10 @@ const CATEGORY_BADGE: Record<Category, string> = {
   mug: "bg-sunny text-navy",
   keychain: "bg-sky text-white",
   tumbler: "bg-coral text-white",
+  pin: "bg-mint text-navy",
+  sticker: "bg-sunny text-navy",
+  paperbag: "bg-sand text-navy",
+  bundle: "bg-coral text-white",
   other: "bg-coral text-white",
 };
 
@@ -35,6 +51,7 @@ export default function ProductCard({
   imageAlt,
   title,
   price,
+  startingFrom = false,
   description,
   href = "#",
 }: ProductCardProps) {
@@ -52,7 +69,7 @@ export default function ProductCard({
       </div>
 
       {/* Area gambar produk, dengan fallback kalau file belum ada */}
-      <div className="relative h-52 w-full border-b-[3px] border-navy bg-[linear-gradient(160deg,#DFF3FB_0%,#BFE0F5_100%)] sm:h-60">
+      <div className="relative h-56 w-full border-b-[3px] border-navy bg-[linear-gradient(160deg,#DFF3FB_0%,#BFE0F5_100%)] sm:h-64">
         {failed ? (
           <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-navy/50">
             <ImageIcon size={32} strokeWidth={1.75} />
@@ -65,7 +82,7 @@ export default function ProductCard({
             src={imageSrc}
             alt={imageAlt}
             fill
-            className="object-contain p-6"
+            className="object-contain p-2"
             onError={() => setFailed(true)}
           />
         )}
@@ -77,6 +94,11 @@ export default function ProductCard({
           {title}
         </h3>
         <p className="mt-1 font-pixel text-lg text-sunny [text-shadow:1.5px_1.5px_0_#0D2B4E] sm:text-xl">
+          {startingFrom && (
+            <span className="mr-1 font-body text-xs font-semibold text-navy/50 [text-shadow:none]">
+              Mulai dari
+            </span>
+          )}
           {price}
         </p>
         <p className="mt-2 flex-1 font-body text-sm text-navy/70">
