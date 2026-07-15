@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import EventCard from "./EventCard";
 import RegistrationModal from "./RegistrationModal";
-import { supabase } from "@/lib/supabaseClient"; // sesuaikan path client supabase-mu
+import { supabase } from "@/lib/supabaseClient";
 import {
   Starfish,
   Hibiscus,
@@ -18,11 +18,21 @@ type EventInfo = {
   location: string;
 };
 
+type EventStatus = "not_open" | "open" | "closed";
+
+
 const CLOSING_CEREMONY_TITLE = "Culture Exchange — Closing Ceremony";
-const CLOSING_CEREMONY_CAPACITY = 350;
+
+const BUTTON_TEXT: Record<EventStatus, string> = {
+  not_open: "BELUM DIBUKA",
+  open: "REGISTER",
+  closed: "CLOSED",
+};
 
 export default function OurEvents() {
   const [activeEvent, setActiveEvent] = useState<EventInfo | null>(null);
+  const [status, setStatus] = useState<EventStatus>("not_open");
+  const [capacity, setCapacity] = useState<number>(0);
   const [registeredCount, setRegisteredCount] = useState<number | null>(null);
 
   const closingCeremony: EventInfo = {
@@ -34,46 +44,36 @@ export default function OurEvents() {
   useEffect(() => {
     let isMounted = true;
 
-    async function fetchCount() {
-      const { count, error } = await supabase
+    async function fetchEventData() {
+      const { data: eventRow } = await supabase
+        .from("events")
+        .select("status, capacity")
+        .eq("title", CLOSING_CEREMONY_TITLE)
+        .single();
+
+      if (eventRow && isMounted) {
+        setStatus(eventRow.status as EventStatus);
+        setCapacity(eventRow.capacity ?? 0);
+      }
+
+      const { count } = await supabase
         .from("registrations")
         .select("*", { count: "exact", head: true })
         .eq("event_title", CLOSING_CEREMONY_TITLE);
 
-      if (!error && isMounted) {
-        setRegisteredCount(count ?? 0);
-      }
+      if (isMounted) setRegisteredCount(count ?? 0);
     }
 
-    fetchCount();
-
-    // Opsional: realtime update tiap ada registrasi baru
-    const channel = supabase
-      .channel("registrations-count")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "registrations",
-          filter: `event_title=eq.${CLOSING_CEREMONY_TITLE}`,
-        },
-        () => {
-          fetchCount();
-        },
-      )
-      .subscribe();
-
+    fetchEventData();
     return () => {
       isMounted = false;
-      supabase.removeChannel(channel);
     };
   }, []);
 
   const registeredText =
     registeredCount === null
       ? "Loading..."
-      : `${registeredCount} / ${CLOSING_CEREMONY_CAPACITY} Registered`;
+      : `${registeredCount} / ${capacity} Registered`;
 
   return (
     <section
@@ -118,9 +118,11 @@ export default function OurEvents() {
               eventDate="27 July 2026"
               locationText={"Gedung Dome\nUniversitas Mataram"}
               registeredCount={registeredText}
-              buttonText="REGISTER"
-              buttonStatus="open"
-              onRegisterClick={() => setActiveEvent(closingCeremony)}
+              buttonText={BUTTON_TEXT[status]}
+              buttonStatus={status}
+              onRegisterClick={() =>
+                status === "open" && setActiveEvent(closingCeremony)
+              }
             />
           </div>
         </div>

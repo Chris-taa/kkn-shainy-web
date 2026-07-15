@@ -14,7 +14,7 @@ type EventCardProps = {
   locationText: string;
   registeredCount?: string;
   buttonText: string;
-  buttonStatus: "open" | "closed";
+  buttonStatus: "not_open" | "open" | "closed";
   onRegisterClick?: () => void;
 };
 
