@@ -22,11 +22,11 @@ export default function Navbar() {
       {/* Logo */}
       <Link href="/" className="flex shrink-0 items-center gap-2">
         <Image
-          src="/images/gambar_logo.png"
+          src="/images/gambar_logo_unram.png"
           alt="Shainy logo"
-          width={44}
-          height={44}
-          className="h-10 w-10 object-contain sm:h-11 sm:w-11"
+          width={160}
+          height={60}
+          className="h-8 w-auto object-contain sm:h-11"
         />
       </Link>
 

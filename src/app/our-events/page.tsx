@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import OurEvents from "@/components/OurEvents";
 
 export const metadata: Metadata = {
-  title: "Our Events | Shainy",
+  title: "Our Events | SHAinni",
   description:
-    "Jadwal dan pendaftaran acara Shainy — Closing Ceremony dan Open Recruitment.",
+    "Jadwal dan pendaftaran acara SHAinni — Closing Ceremony dan Open Recruitment.",
 };
 
 export default function OurEventsPage() {
