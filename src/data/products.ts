@@ -4,11 +4,17 @@ export type ProductDesign = {
   image: string;
 };
 
-/** Varian bahan yang harganya beda-beda (khusus Shirt: 24s vs 30s) */
 export type MaterialOption = {
   id: string;
   label: string;
   price: number;
+};
+
+/** Referensi ke produk asli yang jadi isi bundle, biar bisa ambil daftar desainnya */
+export type BundleComponent = {
+  productSlug: string;
+  label: string; // ditampilkan sebagai judul section pemilih desain
+  quantity: number;
 };
 
 export type Product = {
@@ -25,15 +31,14 @@ export type Product = {
     | "bundle";
   categoryLabel: string;
   title: string;
-  /** Harga dasar/ditampilkan di kartu. Kalau ada `materials`, ini dianggap harga termurah. */
   price: number;
   description: string;
   designs: ProductDesign[];
   colors?: string[];
   sizes?: string[];
   materials?: MaterialOption[];
-  /** Khusus produk bundling: daftar isi paketnya */
   bundleItems?: string[];
+  bundleComponents?: BundleComponent[];
 };
 
 const MERCH = "/images/Merch";
@@ -45,7 +50,7 @@ export const PRODUCTS: Product[] = [
     category: "shirt",
     categoryLabel: "SHIRT",
     title: "ShaiTee — Kaos Official Shainy",
-    price: 95000, // termurah (30s), dipakai buat tampilan "mulai dari" di kartu
+    price: 95000,
     description:
       "Kaos official Shainy, tersedia 2 desain. Pilih bahan (24s/30s) dan warna sesuai selera — cek size chart sebelum pilih ukuran.",
     designs: [
@@ -141,10 +146,6 @@ export const PRODUCTS: Product[] = [
   },
 
   // ============ KEYCHAIN ============
-  // CATATAN: nama file asli 25 desain keychain belum dikirim — dipakai pola
-  // penamaan "Keychain 1.png" s/d "Keychain 25.png" sesuai konvensi folder
-  // lain. TOLONG CEK ULANG nama file asli di public/images/Merch/KEYCHAIN,
-  // dan kasih tau kalau beda biar aku perbaiki array ini.
   {
     slug: "keychain",
     category: "keychain",
@@ -239,9 +240,7 @@ export const PRODUCTS: Product[] = [
     title: "Paper Bag Shainy",
     price: 3500,
     description: "Tas kertas buat bungkus belanjaan kamu, opsional.",
-    designs: [
-      { id: "default", label: "Default", image: `${MERCH}/paperbag.png` },
-    ],
+    designs: [{ id: "default", label: "Default", image: `${MERCH}/paper.png` }],
   },
 
   // ============ BUNDLING ============
@@ -250,9 +249,9 @@ export const PRODUCTS: Product[] = [
     category: "bundle",
     categoryLabel: "BUNDLING A",
     title: "Bundling A — T-Shirt + Keychain + Sticker",
-    price: 129000,
+    price: 120000,
     description:
-      "Paket hemat: 1 T-Shirt (pilih desain & bahan saat checkout via catatan), 1 Keychain, 1 Sticker.",
+      "Paket hemat: 1 T-Shirt (pilih desain, bahan & ukuran), 1 Keychain (pilih desain), 1 Sticker (pilih desain).",
     designs: [
       {
         id: "default",
@@ -261,14 +260,20 @@ export const PRODUCTS: Product[] = [
       },
     ],
     bundleItems: ["1x T-Shirt (ShaiTee)", "1x Keychain", "1x Sticker"],
+    bundleComponents: [
+      { productSlug: "shirt", label: "T-Shirt (ShaiTee)", quantity: 1 },
+      { productSlug: "keychain", label: "Keychain", quantity: 1 },
+      { productSlug: "sticker", label: "Sticker", quantity: 1 },
+    ],
   },
   {
     slug: "bundling-b",
     category: "bundle",
     categoryLabel: "BUNDLING B",
     title: "Bundling B — Tumbler + Sticker + Pin",
-    price: 137000,
-    description: "Paket hemat: 1 Tumbler, 1 Sticker, 1 Pin.",
+    price: 135000,
+    description:
+      "Paket hemat: 1 Tumbler (pilih desain), 1 Sticker (pilih desain), 1 Pin (pilih desain).",
     designs: [
       {
         id: "default",
@@ -277,14 +282,20 @@ export const PRODUCTS: Product[] = [
       },
     ],
     bundleItems: ["1x Tumbler (Shainy)", "1x Sticker", "1x Pin"],
+    bundleComponents: [
+      { productSlug: "tumbler", label: "Tumbler (Shainy)", quantity: 1 },
+      { productSlug: "sticker", label: "Sticker", quantity: 1 },
+      { productSlug: "pin", label: "Pin", quantity: 1 },
+    ],
   },
   {
     slug: "bundling-c",
     category: "bundle",
     categoryLabel: "BUNDLING C",
     title: "Bundling C — Totebag + Pin + Keychain",
-    price: 82000,
-    description: "Paket hemat: 1 Totebag, 1 Pin, 1 Keychain.",
+    price: 80000,
+    description:
+      "Paket hemat: 1 Totebag (pilih desain), 1 Pin (pilih desain), 1 Keychain (pilih desain).",
     designs: [
       {
         id: "default",
@@ -293,21 +304,22 @@ export const PRODUCTS: Product[] = [
       },
     ],
     bundleItems: ["1x Totebag (ShaiBag)", "1x Pin", "1x Keychain"],
+    bundleComponents: [
+      { productSlug: "totebag", label: "Totebag (ShaiBag)", quantity: 1 },
+      { productSlug: "pin", label: "Pin", quantity: 1 },
+      { productSlug: "keychain", label: "Keychain", quantity: 1 },
+    ],
   },
 ];
 
-/** 7 kategori utama yang tampil di grid depan Store (punya cover image sendiri) */
 export const MAIN_CATEGORIES = PRODUCTS.filter(
   (p) => p.category !== "bundle" && p.category !== "paperbag",
 );
 
-/** Produk bundling (belum termasuk Paper Bag — itu jadi add-on di Cart) */
 export const BUNDLE_PRODUCTS = PRODUCTS.filter((p) => p.category === "bundle");
 
-/** Data Paper Bag, dipakai sebagai add-on checkbox di halaman /cart */
 export const PAPER_BAG = PRODUCTS.find((p) => p.slug === "paper-bag")!;
 
-/** Cover image tiap kategori utama, dipakai di kartu grid Store (bukan gambar desain pertama) */
 export const CATEGORY_COVER: Record<string, string> = {
   shirt: `${MERCH}/SHIRT.png`,
   totebag: `${MERCH}/TOTEBAG.png`,

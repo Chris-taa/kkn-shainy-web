@@ -12,9 +12,15 @@ import {
   ImageIcon,
   PackageCheck,
 } from "lucide-react";
-import type { Product } from "@/data/products";
+import { PRODUCTS, type Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { formatRupiah } from "@/lib/format";
+
+type BundleSelection = {
+  designId: string;
+  size?: string;
+  materialId?: string;
+};
 
 export default function ProductDetail({ product }: { product: Product }) {
   const { addItem } = useCart();
@@ -28,17 +34,90 @@ export default function ProductDetail({ product }: { product: Product }) {
   const [justAdded, setJustAdded] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
 
+  const isBundle = product.category === "bundle";
+
+  // Ambil produk asli tiap komponen bundle (buat referensi daftar desain/size/material)
+  const bundleComponentProducts = (product.bundleComponents ?? []).map(
+    (comp) => ({
+      ...comp,
+      refProduct: PRODUCTS.find((p) => p.slug === comp.productSlug),
+    }),
+  );
+
+  // State pilihan desain per komponen bundle, key = productSlug
+  const [bundleSelections, setBundleSelections] = useState<
+    Record<string, BundleSelection>
+  >(() => {
+    const initial: Record<string, BundleSelection> = {};
+    bundleComponentProducts.forEach(({ productSlug, refProduct }) => {
+      if (!refProduct) return;
+      initial[productSlug] = {
+        designId: refProduct.designs[0]?.id ?? "",
+        size: refProduct.sizes?.[0],
+        materialId: refProduct.materials?.[0]?.id,
+      };
+    });
+    return initial;
+  });
+
+  const updateBundleSelection = (
+    productSlug: string,
+    patch: Partial<BundleSelection>,
+  ) => {
+    setBundleSelections((prev) => ({
+      ...prev,
+      [productSlug]: { ...prev[productSlug], ...patch },
+    }));
+  };
+
   const activeDesign =
     product.designs.find((d) => d.id === designId) ?? product.designs[0];
   const activeMaterial = product.materials?.find((m) => m.id === materialId);
-
-  // Kalau produk punya varian bahan (misal Shirt: 24s/30s), harga ngikut
-  // bahan yang dipilih. Kalau enggak, ya harga dasar produk.
   const activePrice = activeMaterial ? activeMaterial.price : product.price;
 
-  const isBundle = product.category === "bundle";
-
   const handleAddToCart = () => {
+    if (isBundle) {
+      // Gabungin semua pilihan desain per item jadi 1 teks catatan,
+      // biar tetap cocok sama struktur OrderItem yang cuma punya 1 field `design`.
+      const designSummary = bundleComponentProducts
+        .map(({ label, productSlug, refProduct }) => {
+          if (!refProduct) return null;
+          const sel = bundleSelections[productSlug];
+          const chosenDesign =
+            refProduct.designs.find((d) => d.id === sel?.designId)?.label ??
+            refProduct.designs[0]?.label;
+
+          const extra = [
+            sel?.size,
+            refProduct.materials?.find((m) => m.id === sel?.materialId)?.label,
+          ]
+            .filter(Boolean)
+            .join(", ");
+
+          return `${label}: ${chosenDesign}${extra ? ` (${extra})` : ""}`;
+        })
+        .filter(Boolean)
+        .join(" · ");
+
+      addItem(
+        {
+          id: `${product.slug}-${Object.values(bundleSelections)
+            .map((s) => s.designId)
+            .join("-")}`,
+          slug: product.slug,
+          title: product.title,
+          image: product.designs[0].image,
+          price: product.price,
+          design: designSummary,
+        },
+        quantity,
+      );
+
+      setJustAdded(true);
+      setTimeout(() => setJustAdded(false), 1800);
+      return;
+    }
+
     const variantId = [product.slug, designId, color, size, materialId]
       .filter(Boolean)
       .join("-")
@@ -75,7 +154,6 @@ export default function ProductDetail({ product }: { product: Product }) {
       </Link>
 
       <div className="neo-card grid grid-cols-1 overflow-hidden rounded-[2rem] bg-white lg:grid-cols-2">
-        {/* Gambar desain aktif, dengan fallback kalau file belum ada */}
         <div className="relative flex h-72 items-center justify-center border-b-[3px] border-navy bg-[linear-gradient(160deg,#DFF3FB_0%,#BFE0F5_100%)] p-4 sm:h-96 lg:h-auto lg:border-b-0 lg:border-r-[3px]">
           {imgFailed ? (
             <div className="flex flex-col items-center gap-2 text-navy/40">
@@ -97,7 +175,6 @@ export default function ProductDetail({ product }: { product: Product }) {
           )}
         </div>
 
-        {/* Info & pemilih varian */}
         <div className="flex flex-col p-6 sm:p-8">
           <span className="neo-pill w-fit rounded-full bg-sunny px-4 py-1.5">
             <span className="font-pixel text-[10px] text-navy">
@@ -108,13 +185,12 @@ export default function ProductDetail({ product }: { product: Product }) {
             {product.title}
           </h1>
           <p className="mt-2 font-pixel text-2xl text-sunny [text-shadow:2px_2px_0_#0D2B4E]">
-            {formatRupiah(activePrice)}
+            {formatRupiah(isBundle ? product.price : activePrice)}
           </p>
           <p className="mt-3 font-body text-sm text-navy/70">
             {product.description}
           </p>
 
-          {/* Isi paket, khusus produk bundling */}
           {isBundle && product.bundleItems && (
             <div className="mt-4 flex flex-col gap-1.5 rounded-2xl border-[3px] border-dashed border-navy/30 bg-sand/20 p-4">
               {product.bundleItems.map((item) => (
@@ -126,8 +202,8 @@ export default function ProductDetail({ product }: { product: Product }) {
             </div>
           )}
 
-          {/* Pilihan desain — disembunyiin kalau cuma ada 1 opsi (misal bundling/paper bag) */}
-          {product.designs.length > 1 && (
+          {/* ===== Pemilih desain untuk produk NON-bundle ===== */}
+          {!isBundle && product.designs.length > 1 && (
             <div className="mt-6">
               <p className="font-body text-xs font-semibold uppercase tracking-wide text-navy/60">
                 Design
@@ -167,8 +243,7 @@ export default function ProductDetail({ product }: { product: Product }) {
             </div>
           )}
 
-          {/* Pilihan warna — cuma muncul kalau produk punya varian warna */}
-          {product.colors && (
+          {!isBundle && product.colors && (
             <div className="mt-5">
               <p className="font-body text-xs font-semibold uppercase tracking-wide text-navy/60">
                 Color
@@ -190,8 +265,7 @@ export default function ProductDetail({ product }: { product: Product }) {
             </div>
           )}
 
-          {/* Pilihan ukuran */}
-          {product.sizes && (
+          {!isBundle && product.sizes && (
             <div className="mt-5">
               <div className="flex items-center justify-between">
                 <p className="font-body text-xs font-semibold uppercase tracking-wide text-navy/60">
@@ -223,8 +297,7 @@ export default function ProductDetail({ product }: { product: Product }) {
             </div>
           )}
 
-          {/* Pilihan bahan — harga berubah ngikut ini */}
-          {product.materials && (
+          {!isBundle && product.materials && (
             <div className="mt-5">
               <p className="font-body text-xs font-semibold uppercase tracking-wide text-navy/60">
                 Bahan
@@ -248,7 +321,123 @@ export default function ProductDetail({ product }: { product: Product }) {
             </div>
           )}
 
-          {/* Jumlah */}
+          {/* ===== Pemilih desain PER ITEM khusus BUNDLE ===== */}
+          {isBundle &&
+            bundleComponentProducts.map(
+              ({ productSlug, label, refProduct }) => {
+                if (!refProduct) return null;
+                const sel = bundleSelections[productSlug];
+                const selectedDesign = refProduct.designs.find(
+                  (d) => d.id === sel?.designId,
+                );
+
+                return (
+                  <div
+                    key={productSlug}
+                    className="mt-6 rounded-2xl border-[3px] border-navy/15 p-4"
+                  >
+                    <p className="font-body text-sm font-bold text-navy">
+                      {label}
+                    </p>
+
+                    {/* Pilihan desain item ini */}
+                    <p className="mt-3 font-body text-xs font-semibold uppercase tracking-wide text-navy/60">
+                      Design
+                    </p>
+                    <div className="mt-2 flex max-h-36 flex-wrap gap-2.5 overflow-y-auto pr-1">
+                      {refProduct.designs.map((d) => (
+                        <button
+                          key={d.id}
+                          type="button"
+                          onClick={() =>
+                            updateBundleSelection(productSlug, {
+                              designId: d.id,
+                            })
+                          }
+                          aria-label={d.label}
+                          className={`overflow-hidden rounded-xl border-[3px] transition-transform ${
+                            d.id === sel?.designId
+                              ? "neo-shadow-sm -translate-y-0.5 border-navy"
+                              : "border-navy/30"
+                          }`}
+                        >
+                          <Image
+                            src={d.image}
+                            alt={d.label}
+                            width={48}
+                            height={48}
+                            className="h-12 w-12 object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.opacity = "0.15";
+                            }}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                    <p className="mt-1.5 font-body text-xs text-navy/50">
+                      {selectedDesign?.label}
+                    </p>
+
+                    {/* Pilihan ukuran, kalau item ini punya (misal shirt) */}
+                    {refProduct.sizes && (
+                      <div className="mt-4">
+                        <p className="font-body text-xs font-semibold uppercase tracking-wide text-navy/60">
+                          Ukuran
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {refProduct.sizes.map((s) => (
+                            <button
+                              key={s}
+                              type="button"
+                              onClick={() =>
+                                updateBundleSelection(productSlug, { size: s })
+                              }
+                              className={`flex h-9 w-9 items-center justify-center rounded-full border-[3px] border-navy font-body text-xs font-bold transition-colors ${
+                                sel?.size === s
+                                  ? "bg-sunny text-navy"
+                                  : "bg-white text-navy"
+                              }`}
+                            >
+                              {s}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Pilihan bahan, kalau item ini punya (misal shirt) */}
+                    {refProduct.materials && (
+                      <div className="mt-4">
+                        <p className="font-body text-xs font-semibold uppercase tracking-wide text-navy/60">
+                          Bahan
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {refProduct.materials.map((m) => (
+                            <button
+                              key={m.id}
+                              type="button"
+                              onClick={() =>
+                                updateBundleSelection(productSlug, {
+                                  materialId: m.id,
+                                })
+                              }
+                              className={`rounded-full border-[3px] border-navy px-3 py-1.5 font-body text-xs font-semibold transition-colors ${
+                                sel?.materialId === m.id
+                                  ? "bg-mint text-navy"
+                                  : "bg-white text-navy"
+                              }`}
+                            >
+                              {m.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              },
+            )}
+
           <div className="mt-5">
             <p className="font-body text-xs font-semibold uppercase tracking-wide text-navy/60">
               Jumlah
