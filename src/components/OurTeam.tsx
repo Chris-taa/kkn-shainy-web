@@ -18,57 +18,59 @@ type TeamMember = {
 // Urutan: [kiri-atas, tengah-atas, kanan-atas, kiri-bawah, tengah-bawah, kanan-bawah]
 const TEAM: TeamMember[] = [
   {
-    name: "Muhammad Hazim Maulana",
+    name: "M. Juniardi",
     department: "Department of Informatics Engineering",
     role: "Technical Lead",
-    photo: "/images/team/hazim.png",
+    photo: "/images/team/jun.png",
     badge: "sky",
   },
   {
-    name: "Muhammad Naufal Rahmatullah",
+    name: "Christian Hadi Candra",
     department: "Department of Informatics Engineering",
     role: "Leader",
-    photo: "/images/team/naufal.png",
+    photo: "/images/team/chess.png",
     badge: "coral",
   },
   {
-    name: "Lalu Muhammad Faqih Firmansyah",
+    name: "Linda Julivia",
     department: "Department of Architecture",
     role: "Creative Lead",
-    photo: "/images/team/lalu.png",
+    photo: "/images/team/lyn.png",
     badge: "sky",
   },
   {
-    name: "Fitry Wau",
+    name: "Tiara Andriani Isnawati",
     department: "Department of Food Science & Technology",
     role: "Secretary",
-    photo: "/images/team/fitry.png",
+    photo: "/images/team/tya.png",
     badge: "mint",
   },
   {
-    name: "Nadya Azzahra",
+    name: "Aylira Natasha Susanto",
     department: "Department of Informatics Engineering",
     role: "Treasurer",
-    photo: "/images/team/nadya.png",
+    photo: "/images/team/ay.png",
     badge: "sunny",
   },
   {
-    name: "Revata Anwar",
+    name: "Hendru Elban Anshori",
     department: "Department of Food Science & Technology",
     role: "Public Relation",
-    photo: "/images/team/revata.png",
+    photo: "/images/team/hen.png",
     badge: "mint",
   },
 ];
 
 // offset vertikal tiap kartu biar zigzag kaya honeycomb
+// pakai margin-top (bukan translate) supaya tinggi section ikut menyesuaikan,
+// jadi kartu paling bawah nggak kepotong sama overflow-hidden section
 const OFFSET_Y = [
-  "sm:translate-y-16", // kiri-atas
-  "sm:translate-y-0", // tengah-atas (paling naik)
-  "sm:translate-y-16", // kanan-atas
-  "sm:translate-y-28", // kiri-bawah
-  "sm:translate-y-44", // tengah-bawah
-  "sm:translate-y-28", // kanan-bawah
+  "sm:mt-16", // kiri-atas
+  "sm:mt-0", // tengah-atas (paling naik)
+  "sm:mt-16", // kanan-atas
+  "sm:mt-12", // kiri-bawah
+  "sm:mt-28", // tengah-bawah
+  "sm:mt-12", // kanan-bawah
 ];
 
 const BADGE_BG: Record<TeamMember["badge"], string> = {
@@ -112,7 +114,7 @@ export default function OurTeam() {
   return (
     <section
       id="our-team"
-      className="relative w-full overflow-hidden bg-[#DFF3FB] pb-24 pt-32 sm:pb-40 sm:pt-40"
+      className="relative w-full overflow-hidden bg-[#DFF3FB] pb-32 pt-32 sm:pb-56 sm:pt-40"
     >
       {/* Gelembung ambient, konsisten sama Hero */}
       <BubbleField />
@@ -142,7 +144,7 @@ export default function OurTeam() {
         </p>
 
         {/* Grid 3 kolom, kartu tengah lebih naik (efek zigzag/honeycomb) */}
-        <div className="mt-16 grid grid-cols-1 items-start justify-items-center gap-x-6 gap-y-10 sm:grid-cols-3 sm:gap-y-6">
+        <div className="mt-16 grid grid-cols-1 items-start justify-items-center gap-x-6 gap-y-10 sm:grid-cols-3 sm:gap-y-10">
           {TEAM.map((member, i) => (
             <div key={member.name} className={OFFSET_Y[i]}>
               <TeamCard member={member} />
@@ -167,4 +169,3 @@ export default function OurTeam() {
     </section>
   );
 }
-    
