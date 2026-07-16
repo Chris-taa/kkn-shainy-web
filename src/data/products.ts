@@ -49,10 +49,10 @@ export const PRODUCTS: Product[] = [
     slug: "shirt",
     category: "shirt",
     categoryLabel: "SHIRT",
-    title: "ShaiTee — Kaos Official SHAini",
+    title: "ShaiTee — Kaos Official SHAinni",
     price: 95000,
     description:
-      "Kaos official SHAini, tersedia 2 desain. Pilih bahan (24s/30s) dan warna sesuai selera — cek size chart sebelum pilih ukuran.",
+      "Kaos official SHAinni, tersedia 2 desain. Pilih bahan (24s/30s) dan warna sesuai selera — cek size chart sebelum pilih ukuran.",
     designs: [
       {
         id: "shaitee-001",
@@ -77,10 +77,10 @@ export const PRODUCTS: Product[] = [
     slug: "totebag",
     category: "totebag",
     categoryLabel: "TOTEBAG",
-    title: "ShaiBag — Totebag Official SHAini",
+    title: "ShaiBag — Totebag Official SHAinni",
     price: 60000,
     description:
-      "Totebag harian dengan desain official SHAini, tersedia 3 pilihan desain.",
+      "Totebag harian dengan desain official SHAinni, tersedia 3 pilihan desain.",
     designs: [
       {
         id: "shaibag-001",
@@ -105,10 +105,10 @@ export const PRODUCTS: Product[] = [
     slug: "mug",
     category: "mug",
     categoryLabel: "MUG",
-    title: "ShaiMug — Mug Official SHAini",
+    title: "ShaiMug — Mug Official SHAinni",
     price: 35000,
     description:
-      "Mug keramik dengan artwork SHAini, tersedia 2 pilihan desain.",
+      "Mug keramik dengan artwork SHAinni, tersedia 2 pilihan desain.",
     designs: [
       {
         id: "shaimug-001",
@@ -128,18 +128,18 @@ export const PRODUCTS: Product[] = [
     slug: "tumbler",
     category: "tumbler",
     categoryLabel: "TUMBLER",
-    title: "SHAini — Tumbler Official",
+    title: "SHAinni — Tumbler Official",
     price: 120000,
     description: "Botol minum stainless, tersedia 2 pilihan desain.",
     designs: [
       {
-        id: "SHAini-001",
-        label: "SHAini 001",
+        id: "SHAinni-001",
+        label: "SHAinni 001",
         image: `${MERCH}/TUMBLER/TUMBLER 1.png`,
       },
       {
-        id: "SHAini-002",
-        label: "SHAini 002",
+        id: "SHAinni-002",
+        label: "SHAinni 002",
         image: `${MERCH}/TUMBLER/TUMBLER 2.png`,
       },
     ],
@@ -150,7 +150,7 @@ export const PRODUCTS: Product[] = [
     slug: "keychain",
     category: "keychain",
     categoryLabel: "KEYCHAIN",
-    title: "Keychain Official SHAini",
+    title: "Keychain Official SHAinni",
     price: 17000,
     description: "Gantungan kunci akrilik, tersedia 26 pilihan desain.",
     designs: [
@@ -191,18 +191,18 @@ export const PRODUCTS: Product[] = [
         image: `${MERCH}/KEYCHAIN/scaredberry.png`,
       },
       {
-        id: "SHAini-00",
-        label: "SHAini 00",
+        id: "SHAinni-00",
+        label: "SHAinni 00",
         image: `${MERCH}/KEYCHAIN/Shainy 00.png`,
       },
       {
-        id: "SHAini-01",
-        label: "SHAini 01",
+        id: "SHAinni-01",
+        label: "SHAinni 01",
         image: `${MERCH}/KEYCHAIN/Shainy 01.png`,
       },
       {
-        id: "SHAini-02",
-        label: "SHAini 02",
+        id: "SHAinni-02",
+        label: "SHAinni 02",
         image: `${MERCH}/KEYCHAIN/Shainy 02.png`,
       },
       {
@@ -228,7 +228,7 @@ export const PRODUCTS: Product[] = [
     slug: "pin",
     category: "pin",
     categoryLabel: "PIN",
-    title: "Pin Official SHAini",
+    title: "Pin Official SHAinni",
     price: 15000,
     description: "Pin akrilik/emblem, tersedia 26 pilihan warna & desain.",
     designs: [
@@ -266,9 +266,9 @@ export const PRODUCTS: Product[] = [
     slug: "sticker",
     category: "sticker",
     categoryLabel: "STICKER",
-    title: "Sticker Official SHAini",
-    price: 12000,
-    description: "Sticker vinyl program SHAini, tersedia 6 pilihan desain.",
+    title: "Sticker Official SHAinni",
+    price: 10000,
+    description: "Sticker vinyl program SHAinni, tersedia 6 pilihan desain.",
     designs: [
       {
         id: "basic",
@@ -288,8 +288,8 @@ export const PRODUCTS: Product[] = [
         image: `${MERCH}/STICKER/KFT.png`,
       },
       {
-        id: "SHAini-000",
-        label: "SHAini 000",
+        id: "SHAinni-000",
+        label: "SHAinni 000",
         image: `${MERCH}/STICKER/Shainy 000.png`,
       },
     ],
@@ -300,7 +300,7 @@ export const PRODUCTS: Product[] = [
     slug: "paper-bag",
     category: "paperbag",
     categoryLabel: "PAPER BAG",
-    title: "Paper Bag SHAini",
+    title: "Paper Bag SHAinni",
     price: 3500,
     description: "Tas kertas buat bungkus belanjaan kamu, opsional.",
     designs: [{ id: "default", label: "Default", image: `${MERCH}/paper.png` }],
@@ -344,9 +344,9 @@ export const PRODUCTS: Product[] = [
         image: `${MERCH}/BUNDLE 2.png`,
       },
     ],
-    bundleItems: ["1x Tumbler (SHAini)", "1x Sticker", "1x Pin"],
+    bundleItems: ["1x Tumbler (SHAinni)", "1x Sticker", "1x Pin"],
     bundleComponents: [
-      { productSlug: "tumbler", label: "Tumbler (SHAini)", quantity: 1 },
+      { productSlug: "tumbler", label: "Tumbler (SHAinni)", quantity: 1 },
       { productSlug: "sticker", label: "Sticker", quantity: 1 },
       { productSlug: "pin", label: "Pin", quantity: 1 },
     ],

@@ -21,42 +21,42 @@ const TEAM: TeamMember[] = [
     name: "Tiara Andriani Isnawati",
     department: "Department of Food Science & Technology",
     role: "Secretary",
-    photo: "/images/team/tya.png",
+    photo: "/images/Member/tya.png",
     badge: "mint",
   },
   {
     name: "Christian Hadi Candra",
     department: "Department of Informatics Engineering",
     role: "Leader",
-    photo: "/images/team/chess.png",
+    photo: "/images/Member/chess.png",
     badge: "coral",
   },
   {
     name: "Aylira Natasha Susanto",
     department: "Department of Informatics Engineering",
     role: "Treasurer",
-    photo: "/images/team/ay.png",
+    photo: "/images/Member/ay.png",
     badge: "sunny",
   },
   {
     name: "M. Juniardi",
     department: "Department of Informatics Engineering",
     role: "Technical Lead",
-    photo: "/images/team/jun.png",
+    photo: "/images/Member/jun.png",
     badge: "sky",
   },
   {
     name: "Linda Julivia",
     department: "Department of Architecture",
     role: "Creative Lead",
-    photo: "/images/team/lyn.png",
+    photo: "/images/Member/lyn.png",
     badge: "sky",
   },
   {
     name: "Hendru Elban Anshori",
     department: "Department of Food Science & Technology",
     role: "Public Relation",
-    photo: "/images/team/hen.png",
+    photo: "/images/Member/hen.png",
     badge: "mint",
   },
 ];
@@ -82,27 +82,33 @@ const BADGE_BG: Record<TeamMember["badge"], string> = {
 
 function TeamCard({ member }: { member: TeamMember }) {
   return (
-    <div className="neo-card relative flex w-full max-w-[240px] flex-col items-center rounded-3xl bg-white px-5 pb-5 pt-5">
-      {/* foto */}
-      <div className="neo-border relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-sand">
-        <Image
-          src={member.photo}
-          alt={member.name}
-          fill
-          className="object-cover"
-        />
+    <div className="neo-card relative flex w-full max-w-[240px] flex-col items-center overflow-visible rounded-3xl bg-white px-5 pb-5">
+      {/* spacer: ngasih "jatah tempat" buat foto yang nongol ke atas */}
+      <div className="relative h-[210px] w-full sm:h-[240px]">
+        {/* frame dekoratif sand, ukurannya tetap sama kaya sebelumnya */}
+        <div className="neo-border absolute inset-x-0 bottom-0 h-[150px] rounded-2xl bg-sand sm:h-[170px]" />
+
+        {/* foto — lebih besar dari frame, nongol ke atas, TAPI tetap di dalam area spacer */}
+        <div className="absolute inset-x-0 bottom-0 z-10 mx-auto h-[210px] w-[180px] sm:h-[240px] sm:w-[210px]">
+          <Image
+            src={member.photo}
+            alt={member.name}
+            fill
+            className="object-contain object-bottom drop-shadow-[3px_5px_0_rgba(13,43,78,0.2)]"
+          />
+        </div>
       </div>
 
-      <h3 className="mt-4 text-center font-pixel text-sm leading-snug text-navy [text-shadow:1px_1px_0_#FFC93C] sm:text-base">
+      <h3 className="relative z-10 mt-4 text-center font-pixel text-sm leading-snug text-navy [text-shadow:1px_1px_0_#FFC93C] sm:text-base">
         {member.name}
       </h3>
 
-      <p className="mt-2 text-center font-body text-[10px] uppercase leading-relaxed tracking-wide text-navy/60 sm:text-xs">
+      <p className="relative z-10 mt-2 text-center font-body text-[10px] uppercase leading-relaxed tracking-wide text-navy/60 sm:text-xs">
         {member.department}
       </p>
 
       <span
-        className={`neo-shadow-sm mt-3 inline-block rounded-full border-3 border-navy px-5 py-1.5 text-center font-pixel text-[10px] sm:text-xs ${BADGE_BG[member.badge]}`}
+        className={`neo-shadow-sm relative z-10 mt-3 inline-block rounded-full border-3 border-navy px-5 py-1.5 text-center font-pixel text-[10px] sm:text-xs ${BADGE_BG[member.badge]}`}
       >
         {member.role.toUpperCase()}
       </span>
