@@ -39,7 +39,7 @@ const TEAM: TeamMember[] = [
     badge: "sunny",
   },
   {
-    name: "M. Juniardi",
+    name: "Muhammad Rizki Juniardi",
     department: "Department of Informatics Engineering",
     role: "Technical Lead",
     photo: "/images/Member/jun.png",
