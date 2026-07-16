@@ -20,11 +20,10 @@ type EventInfo = {
 
 type EventStatus = "not_open" | "open" | "closed";
 
-
 const CLOSING_CEREMONY_TITLE = "Culture Exchange — Closing Ceremony";
 
 const BUTTON_TEXT: Record<EventStatus, string> = {
-  not_open: "BELUM DIBUKA",
+  not_open: "COMMING SOON",
   open: "REGISTER",
   closed: "CLOSED",
 };
