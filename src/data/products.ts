@@ -203,7 +203,7 @@ export const PRODUCTS: Product[] = [
       {
         id: "SHAinni-02",
         label: "SHAinni 02",
-        image: `${MERCH}/KEYCHAIN/Shainy 02.png`,
+        image: `${MERCH}/KEYCHAIN/SHAINNI 2.png`,
       },
       {
         id: "sliced-kiwi",
