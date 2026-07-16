@@ -158,7 +158,7 @@ export const PRODUCTS: Product[] = [
       {
         id: "basic-korean",
         label: "Basic Korean",
-        image: `${MERCH}/KEYCHAIN/Basic Korean S.png`,
+        image: `${MERCH}/KEYCHAIN/Basic KoreanS.png`,
       },
       { id: "basic", label: "Basic", image: `${MERCH}/KEYCHAIN/basic.png` },
       { id: "db-2", label: "DB 2", image: `${MERCH}/KEYCHAIN/DBS 2.png` },
@@ -193,12 +193,12 @@ export const PRODUCTS: Product[] = [
       {
         id: "SHAinni-00",
         label: "SHAinni 00",
-        image: `${MERCH}/KEYCHAIN/Shainy 00.png`,
+        image: `${MERCH}/KEYCHAIN/SHAINY 00.png`,
       },
       {
         id: "SHAinni-01",
         label: "SHAinni 01",
-        image: `${MERCH}/KEYCHAIN/Shainy 01.png`,
+        image: `${MERCH}/KEYCHAIN/SHAINY 01.png`,
       },
       {
         id: "SHAinni-02",
@@ -273,9 +273,13 @@ export const PRODUCTS: Product[] = [
       {
         id: "basic",
         label: "Basic Korean",
-        image: `${MERCH}/STICKER/BASIC.png`,
+        image: `${MERCH}/STICKER/SBASIC.png`,
       },
-      { id: "db", label: "Digital Business", image: `${MERCH}/STICKER/SDB.png` },
+      {
+        id: "db",
+        label: "Digital Business",
+        image: `${MERCH}/STICKER/SDB.png`,
+      },
       { id: "eps", label: "EPS TOPIK", image: `${MERCH}/STICKER/SEPS.png` },
       {
         id: "kfb",
