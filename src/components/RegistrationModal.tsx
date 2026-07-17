@@ -18,6 +18,18 @@ type FormState = {
   noWa: string;
 };
 
+// Ubah jadi Title Case, misal "samara ANJANI" -> "Samara Anjani"
+// Juga rapiin spasi ganda jadi satu spasi
+function toTitleCase(text: string) {
+  return text
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 export default function RegistrationModal({
   eventTitle,
   eventDate,
@@ -49,12 +61,38 @@ export default function RegistrationModal({
     setStatus("loading");
     setErrorMsg("");
 
+    const namaRapi = toTitleCase(form.nama);
+    const instansiRapi = toTitleCase(form.instansi);
+
+    // Cek dulu apakah nama yang sama (tanpa peduli besar/kecil huruf)
+    // udah pernah daftar di event ini
+    const { data: existing, error: checkError } = await supabase
+      .from("registrations")
+      .select("id")
+      .eq("event_title", eventTitle)
+      .ilike("nama", namaRapi)
+      .limit(1);
+
+    if (checkError) {
+      setStatus("error");
+      setErrorMsg("Gagal memeriksa data. Coba lagi sebentar lagi ya.");
+      return;
+    }
+
+    if (existing && existing.length > 0) {
+      setStatus("error");
+      setErrorMsg(
+        `Nama "${namaRapi}" sudah terdaftar di event ini. Gunakan nama lain kalau ini bukan kamu.`,
+      );
+      return;
+    }
+
     const newTicketId = `SHAINY-${Date.now().toString(36).toUpperCase()}`;
 
     const { error } = await supabase.from("registrations").insert({
       ticket_id: newTicketId,
-      nama: form.nama.trim(),
-      instansi: form.instansi.trim(),
+      nama: namaRapi,
+      instansi: instansiRapi,
       no_wa: form.noWa.trim(),
       event_title: eventTitle,
     });
@@ -90,8 +128,8 @@ export default function RegistrationModal({
         {status === "success" ? (
           <ETicket
             ticketId={ticketId}
-            nama={form.nama}
-            instansi={form.instansi}
+            nama={toTitleCase(form.nama)}
+            instansi={toTitleCase(form.instansi)}
             noWa={form.noWa}
             eventTitle={eventTitle}
             eventDate={eventDate}
