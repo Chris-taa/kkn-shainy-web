@@ -75,7 +75,7 @@ export default function RegistrationModal({
       onClick={onClose}
     >
       <div
-        className="neo-card relative w-full max-w-md rounded-3xl bg-white p-6 sm:p-8"
+        className="neo-card relative w-full max-w-md rounded-3xl bg-white p-6 sm:p-8 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -91,6 +91,8 @@ export default function RegistrationModal({
           <ETicket
             ticketId={ticketId}
             nama={form.nama}
+            instansi={form.instansi}
+            noWa={form.noWa}
             eventTitle={eventTitle}
             eventDate={eventDate}
             eventLocation={eventLocation}

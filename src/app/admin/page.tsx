@@ -130,7 +130,8 @@ function OrderDetailModal({
 
                 <div className="flex-1">
                   <p className="font-body text-sm font-bold text-navy">
-                    {item.title} <span className="text-navy/50">x{item.quantity}</span>
+                    {item.title}{" "}
+                    <span className="text-navy/50">x{item.quantity}</span>
                   </p>
                   {variant && (
                     <p className="font-body text-xs text-navy/60">{variant}</p>
@@ -200,11 +201,13 @@ export default function AdminOrdersPage() {
       fetchOrders();
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        router.replace("/admin/login");
-      }
-    });
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        if (!session) {
+          router.replace("/admin/login");
+        }
+      },
+    );
 
     return () => listener.subscription.unsubscribe();
   }, [router, fetchOrders]);
@@ -218,7 +221,7 @@ export default function AdminOrdersPage() {
 
     if (!error) {
       setOrders((prev) =>
-        prev.map((o) => (o.id === id ? { ...o, status } : o))
+        prev.map((o) => (o.id === id ? { ...o, status } : o)),
       );
     }
     setUpdatingId(null);
@@ -397,7 +400,12 @@ export default function AdminOrdersPage() {
                 {/* Item pesanan */}
                 <div className="mt-4 flex flex-col gap-1 border-t-[3px] border-dashed border-navy/15 pt-4">
                   {order.items.map((item, idx) => {
-                    const variant = [item.design, item.color, item.size, item.material]
+                    const variant = [
+                      item.design,
+                      item.color,
+                      item.size,
+                      item.material,
+                    ]
                       .filter(Boolean)
                       .join(" · ");
                     return (
@@ -453,7 +461,7 @@ export default function AdminOrdersPage() {
                     onChange={(e) =>
                       handleStatusChange(
                         order.id,
-                        e.target.value as Order["status"]
+                        e.target.value as Order["status"],
                       )
                     }
                     className="rounded-full border-[3px] border-navy bg-white px-3 py-1.5 font-body text-xs font-semibold text-navy outline-none disabled:opacity-50"

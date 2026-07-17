@@ -32,6 +32,7 @@ export type Product = {
   categoryLabel: string;
   title: string;
   price: number;
+  modal: number; // harga modal/HPP produk ini
   description: string;
   designs: ProductDesign[];
   colors?: string[];
@@ -51,6 +52,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "SHIRT",
     title: "ShaiTee — Kaos Official SHAinni",
     price: 95000,
+    modal: 1000,
     description:
       "Kaos official SHAinni, tersedia 2 desain. Pilih bahan (24s/30s) dan warna sesuai selera — cek size chart sebelum pilih ukuran.",
     designs: [
@@ -79,6 +81,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "TOTEBAG",
     title: "ShaiBag — Totebag Official SHAinni",
     price: 60000,
+    modal: 1000,
     description:
       "Totebag harian dengan desain official SHAinni, tersedia 3 pilihan desain.",
     designs: [
@@ -107,6 +110,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "MUG",
     title: "ShaiMug — Mug Official SHAinni",
     price: 35000,
+    modal: 1000,
     description:
       "Mug keramik dengan artwork SHAinni, tersedia 2 pilihan desain.",
     designs: [
@@ -130,6 +134,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "TUMBLER",
     title: "SHAinni — Tumbler Official",
     price: 120000,
+    modal: 1000,
     description: "Botol minum stainless, tersedia 2 pilihan desain.",
     designs: [
       {
@@ -152,6 +157,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "KEYCHAIN",
     title: "Keychain Official SHAinni",
     price: 17000,
+    modal: 1000,
     description: "Gantungan kunci akrilik, tersedia 26 pilihan desain.",
     designs: [
       { id: "banana", label: "Banana", image: `${MERCH}/KEYCHAIN/banana.png` },
@@ -230,6 +236,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "PIN",
     title: "Pin Official SHAinni",
     price: 15000,
+    modal: 1000,
     description: "Pin akrilik/emblem, tersedia 26 pilihan warna & desain.",
     designs: [
       { id: "blue1", label: "Blue 1", image: `${MERCH}/PIN/blue1.png` },
@@ -268,6 +275,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "STICKER",
     title: "Sticker Official SHAinni",
     price: 10000,
+    modal: 1000,
     description: "Sticker vinyl program SHAinni, tersedia 6 pilihan desain.",
     designs: [
       {
@@ -306,6 +314,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "PAPER BAG",
     title: "Paper Bag SHAinni",
     price: 3500,
+    modal: 1000,
     description: "Tas kertas buat bungkus belanjaan kamu, opsional.",
     designs: [{ id: "default", label: "Default", image: `${MERCH}/paper.png` }],
   },
@@ -317,6 +326,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "BUNDLING A",
     title: "Bundling A — T-Shirt + Keychain + Sticker",
     price: 120000,
+    modal: 1000,
     description:
       "Paket hemat: 1 T-Shirt (pilih desain, bahan & ukuran), 1 Keychain (pilih desain), 1 Sticker (pilih desain).",
     designs: [
@@ -339,6 +349,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "BUNDLING B",
     title: "Bundling B — Tumbler + Sticker + Pin",
     price: 135000,
+    modal: 1000,
     description:
       "Paket hemat: 1 Tumbler (pilih desain), 1 Sticker (pilih desain), 1 Pin (pilih desain).",
     designs: [
@@ -361,6 +372,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "BUNDLING C",
     title: "Bundling C — Totebag + Pin + Keychain",
     price: 80000,
+    modal: 1000,
     description:
       "Paket hemat: 1 Totebag (pilih desain), 1 Pin (pilih desain), 1 Keychain (pilih desain).",
     designs: [

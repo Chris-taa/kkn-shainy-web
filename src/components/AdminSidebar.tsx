@@ -3,18 +3,22 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
 import {
   Users,
   PackageOpen,
   CalendarClock,
+  Wallet,
+  ClipboardList,
   LogOut,
   Menu,
   X,
 } from "lucide-react";
-import { supabase } from "@/lib/supabaseClient";
 
 const MENU = [
   { label: "Kelola Pesanan", href: "/admin", icon: PackageOpen },
+  { label: "Keuangan", href: "/admin/finance", icon: Wallet },
+  { label: "Rekap Barang", href: "/admin/finance/recap", icon: ClipboardList },
   { label: "Peserta Closing Ceremony", href: "/admin/peserta", icon: Users },
   { label: "Kelola Event", href: "/admin/events", icon: CalendarClock },
 ];
