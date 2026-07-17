@@ -45,7 +45,7 @@ const TEAM: TeamMember[] = [
     department: "Department of Industry Engineering",
     role: "Treasurer",
     photo: "/images/Member/ay.png",
-    badge: "sunny",
+    badge: "mint",
   },
   {
     name: "Muhammad Rizki Juniardi",
@@ -63,7 +63,7 @@ const TEAM: TeamMember[] = [
     department: "Department of Informatics Engineering",
     role: "Creative Lead",
     photo: "/images/Member/lyn.png",
-    badge: "sky",
+    badge: "sunny",
   },
   {
     name: "Hendru Elban Anshori",
@@ -72,7 +72,7 @@ const TEAM: TeamMember[] = [
     department: "Faculty of Economics & Business, Accounting",
     role: "Public Relation",
     photo: "/images/Member/hen.png",
-    badge: "mint",
+    badge: "sky",
   },
 ];
 
