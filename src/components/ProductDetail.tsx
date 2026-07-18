@@ -12,7 +12,12 @@ import {
   ImageIcon,
   PackageCheck,
 } from "lucide-react";
-import { PRODUCTS, getBundlePrice, type Product } from "@/data/products";
+import {
+  PRODUCTS,
+  getBundlePrice,
+  getDesignImage,
+  type Product,
+} from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { formatRupiah } from "@/lib/format";
 
@@ -74,6 +79,7 @@ export default function ProductDetail({ product }: { product: Product }) {
     product.designs.find((d) => d.id === designId) ?? product.designs[0];
   const activeMaterial = product.materials?.find((m) => m.id === materialId);
   const activePrice = activeMaterial ? activeMaterial.price : product.price;
+  const activeImage = getDesignImage(product, activeDesign.id, materialId);
 
   /**
    * Untuk bundle, harga jual bisa berubah tergantung bahan item utama
@@ -178,8 +184,8 @@ export default function ProductDetail({ product }: { product: Product }) {
             </div>
           ) : (
             <Image
-              key={activeDesign.image}
-              src={activeDesign.image}
+              key={activeImage}
+              src={activeImage}
               alt={`${product.title} - ${activeDesign.label}`}
               width={360}
               height={360}
@@ -239,7 +245,7 @@ export default function ProductDetail({ product }: { product: Product }) {
                     }`}
                   >
                     <Image
-                      src={d.image}
+                      src={getDesignImage(product, d.id, materialId)}
                       alt={d.label}
                       width={56}
                       height={56}
@@ -321,7 +327,10 @@ export default function ProductDetail({ product }: { product: Product }) {
                   <button
                     key={m.id}
                     type="button"
-                    onClick={() => setMaterialId(m.id)}
+                    onClick={() => {
+                      setMaterialId(m.id);
+                      setImgFailed(false);
+                    }}
                     className={`rounded-full border-[3px] border-navy px-4 py-1.5 font-body text-xs font-semibold transition-colors ${
                       materialId === m.id
                         ? "bg-mint text-navy"
@@ -376,7 +385,11 @@ export default function ProductDetail({ product }: { product: Product }) {
                           }`}
                         >
                           <Image
-                            src={d.image}
+                            src={getDesignImage(
+                              refProduct,
+                              d.id,
+                              sel?.materialId,
+                            )}
                             alt={d.label}
                             width={48}
                             height={48}

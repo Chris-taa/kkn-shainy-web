@@ -14,6 +14,14 @@ export type MaterialOption = {
    * Kalau desain yang dipilih nggak ada di sini, fallback ke `product.modal`.
    */
   modalByDesign?: Record<string, number>;
+  /**
+   * Foto khusus per desain untuk bahan ini, kalau fotonya beda dari foto
+   * default di `ProductDesign.image` (misal kaos biasa vs long sleeve,
+   * modelnya beda jadi butuh foto beda). Key = ProductDesign.id.
+   * Kalau desain yang dipilih nggak ada di sini, fallback ke
+   * `ProductDesign.image` punya desain itu.
+   */
+  imageByDesign?: Record<string, string>;
 };
 
 /** Referensi ke produk asli yang jadi isi bundle, biar bisa ambil daftar desainnya */
@@ -104,6 +112,10 @@ export const PRODUCTS: Product[] = [
         modalByDesign: {
           "shaitee-001": 103000,
           "shaitee-002": 88000,
+        },
+        imageByDesign: {
+          "shaitee-001": `${MERCH}/SHIRT/long-design1.png`,
+          "shaitee-002": `${MERCH}/SHIRT/long-design2.png`,
         },
       },
       {
@@ -526,4 +538,25 @@ export function getBundlePrice(product: Product, materialId?: string): number {
     return product.variantPrice[materialId];
   }
   return product.price;
+}
+
+/**
+ * Ambil foto yang tepat untuk sebuah desain, dengan mempertimbangkan
+ * bahan yang dipilih. Kalau bahan itu punya foto override buat desain
+ * ini (misal Long Sleeve punya foto beda dari kaos biasa), pakai itu.
+ * Fallback ke foto default desainnya kalau nggak ada override.
+ */
+export function getDesignImage(
+  product: Product,
+  designId: string,
+  materialId?: string,
+): string {
+  const design = product.designs.find((d) => d.id === designId);
+  const material = product.materials?.find((m) => m.id === materialId);
+
+  if (material?.imageByDesign?.[designId]) {
+    return material.imageByDesign[designId];
+  }
+
+  return design?.image ?? product.designs[0]?.image ?? "";
 }
