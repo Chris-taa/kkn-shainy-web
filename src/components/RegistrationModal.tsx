@@ -18,8 +18,6 @@ type FormState = {
   noWa: string;
 };
 
-// Ubah jadi Title Case, misal "samara ANJANI" -> "Samara Anjani"
-// Juga rapiin spasi ganda jadi satu spasi
 function toTitleCase(text: string) {
   return text
     .trim()
@@ -41,9 +39,7 @@ export default function RegistrationModal({
     instansi: "",
     noWa: "",
   });
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [ticketId, setTicketId] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -57,49 +53,39 @@ export default function RegistrationModal({
     if (!form.nama.trim() || !form.instansi.trim() || !form.noWa.trim()) {
       return;
     }
+    if (status === "loading") return;
 
     setStatus("loading");
     setErrorMsg("");
 
     const namaRapi = toTitleCase(form.nama);
     const instansiRapi = toTitleCase(form.instansi);
-
-    // Cek dulu apakah nama yang sama (tanpa peduli besar/kecil huruf)
-    // udah pernah daftar di event ini
-    const { data: existing, error: checkError } = await supabase
-      .from("registrations")
-      .select("id")
-      .eq("event_title", eventTitle)
-      .ilike("nama", namaRapi)
-      .limit(1);
-
-    if (checkError) {
-      setStatus("error");
-      setErrorMsg("Gagal memeriksa data. Coba lagi sebentar lagi ya.");
-      return;
-    }
-
-    if (existing && existing.length > 0) {
-      setStatus("error");
-      setErrorMsg(
-        `Nama "${namaRapi}" sudah terdaftar di event ini. Gunakan nama lain kalau ini bukan kamu.`,
-      );
-      return;
-    }
-
     const newTicketId = `SHAINY-${Date.now().toString(36).toUpperCase()}`;
 
-    const { error } = await supabase.from("registrations").insert({
-      ticket_id: newTicketId,
-      nama: namaRapi,
-      instansi: instansiRapi,
-      no_wa: form.noWa.trim(),
-      event_title: eventTitle,
+    // Semua penjaminan (kuota + duplikat nama) terjadi ATOMIK
+    // di dalam function `register_participant` di database.
+    const { error } = await supabase.rpc("register_participant", {
+      p_ticket_id: newTicketId,
+      p_nama: namaRapi,
+      p_instansi: instansiRapi,
+      p_no_wa: form.noWa.trim(),
+      p_event_title: eventTitle,
     });
 
     if (error) {
       setStatus("error");
-      setErrorMsg("Gagal menyimpan pendaftaran. Coba lagi sebentar lagi ya.");
+
+      if (error.message?.includes("EVENT_FULL")) {
+        setErrorMsg("Maaf, kuota untuk event ini sudah penuh.");
+      } else if (error.code === "23505") {
+        setErrorMsg(
+          `Nama "${namaRapi}" sudah terdaftar di event ini. Gunakan nama lain kalau ini bukan kamu.`,
+        );
+      } else if (error.message?.includes("EVENT_NOT_FOUND")) {
+        setErrorMsg("Event tidak ditemukan. Coba muat ulang halaman.");
+      } else {
+        setErrorMsg("Gagal menyimpan pendaftaran. Coba lagi sebentar lagi ya.");
+      }
       return;
     }
 

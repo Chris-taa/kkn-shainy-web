@@ -64,8 +64,40 @@ export default function OurEvents() {
     }
 
     fetchEventData();
+
+    // Dengerin insert baru secara realtime, jadi angka auto update
+    // tanpa user perlu refresh halaman.
+    const channel = supabase
+      .channel("registrations-count-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "registrations",
+          filter: `event_title=eq.${CLOSING_CEREMONY_TITLE}`,
+        },
+        () => {
+          if (isMounted) {
+            setRegisteredCount((prev) => (prev ?? 0) + 1);
+          }
+        },
+      )
+      .subscribe();
+
+    // Refetch juga tiap kali tab balik jadi visible, buat jaga-jaga
+    // kalau realtime connection sempat putus pas user minimize lama.
+    function handleVisibilityChange() {
+      if (document.visibilityState === "visible") {
+        fetchEventData();
+      }
+    }
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       isMounted = false;
+      supabase.removeChannel(channel);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
@@ -73,6 +105,13 @@ export default function OurEvents() {
     registeredCount === null
       ? "Loading..."
       : `${registeredCount} / ${capacity} Registered`;
+
+  // Kunci tambahan: kalau kuota udah penuh, tombol otomatis kelihatan
+  // closed di UI juga, walaupun admin lupa ubah status manual.
+  const isFull =
+    registeredCount !== null && registeredCount >= capacity && capacity > 0;
+  const effectiveStatus: EventStatus =
+    isFull && status === "open" ? "closed" : status;
 
   return (
     <section
@@ -117,10 +156,10 @@ export default function OurEvents() {
               eventDate="27 July 2026"
               locationText={"Gedung Dome\nUniversitas Mataram"}
               registeredCount={registeredText}
-              buttonText={BUTTON_TEXT[status]}
-              buttonStatus={status}
+              buttonText={BUTTON_TEXT[effectiveStatus]}
+              buttonStatus={effectiveStatus}
               onRegisterClick={() =>
-                status === "open" && setActiveEvent(closingCeremony)
+                effectiveStatus === "open" && setActiveEvent(closingCeremony)
               }
             />
           </div>
