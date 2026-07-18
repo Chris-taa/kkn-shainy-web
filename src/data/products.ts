@@ -7,7 +7,13 @@ export type ProductDesign = {
 export type MaterialOption = {
   id: string;
   label: string;
-  price: number;
+  price: number; // harga jual untuk varian bahan ini
+  /**
+   * Modal (HPP) per desain untuk bahan ini, kalau modalnya beda-beda
+   * tergantung desain yang dipilih. Key = ProductDesign.id.
+   * Kalau desain yang dipilih nggak ada di sini, fallback ke `product.modal`.
+   */
+  modalByDesign?: Record<string, number>;
 };
 
 /** Referensi ke produk asli yang jadi isi bundle, biar bisa ambil daftar desainnya */
@@ -32,7 +38,7 @@ export type Product = {
   categoryLabel: string;
   title: string;
   price: number;
-  modal: number; // harga modal/HPP produk ini
+  modal: number; // harga modal/HPP default (dipakai kalau nggak ada override di bawah)
   description: string;
   designs: ProductDesign[];
   colors?: string[];
@@ -40,6 +46,19 @@ export type Product = {
   materials?: MaterialOption[];
   bundleItems?: string[];
   bundleComponents?: BundleComponent[];
+  /**
+   * Khusus produk bundle: modal yang beda-beda tergantung kombinasi
+   * bahan + desain dari item utama bundle (biasanya kaos).
+   * Key format: `${materialId}_${designId}`, contoh: "24s_shaitee-001".
+   */
+  variantModal?: Record<string, number>;
+  /**
+   * Khusus produk bundle: harga jual yang beda-beda tergantung bahan
+   * (bukan desain) dari item utama bundle. Contoh: kaos long sleeve
+   * bikin harga bundle naik dari 120rb jadi 135rb.
+   * Key = materialId, contoh: "24s-ls".
+   */
+  variantPrice?: Record<string, number>;
 };
 
 const MERCH = "/images/Merch";
@@ -51,26 +70,51 @@ export const PRODUCTS: Product[] = [
     category: "shirt",
     categoryLabel: "SHIRT",
     title: "ShaiTee — Kaos Official SHAinni",
-    price: 95000,
-    modal: 1000,
+    price: 95000, // harga terendah (bahan 30s), dipakai buat "Mulai dari" di listing
+    modal: 89000, // default: bahan 24s kaos, desain 1
     description:
-      "Kaos official SHAinni, tersedia 2 desain. Pilih bahan (24s/30s) dan warna sesuai selera — cek size chart sebelum pilih ukuran.",
+      "Kaos official SHAinni, tersedia 2 desain. Pilih bahan (24s/30s) dan model (kaos/long sleeve) sesuai selera — cek size chart sebelum pilih ukuran. Long sleeve hanya tersedia di bahan Cotton Combed 24s.",
     designs: [
       {
         id: "shaitee-001",
-        label: "ShaiTee 001",
+        label: "ShaiTee 001", // "Biru" di tabel modal
         image: `${MERCH}/SHIRT/T-SHIRT 1.png`,
       },
       {
         id: "shaitee-002",
-        label: "ShaiTee 002",
+        label: "ShaiTee 002", // "Color / Warna" di tabel modal
         image: `${MERCH}/SHIRT/T-SHIRT 2.png`,
       },
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
     materials: [
-      { id: "24s", label: "Cotton Combed 24s", price: 99000 },
-      { id: "30s", label: "Cotton Combed 30s", price: 95000 },
+      {
+        id: "24s",
+        label: "Cotton Combed 24s — Kaos",
+        price: 99000,
+        modalByDesign: {
+          "shaitee-001": 89000,
+          "shaitee-002": 74000,
+        },
+      },
+      {
+        id: "24s-ls",
+        label: "Cotton Combed 24s — Long Sleeve",
+        price: 115000,
+        modalByDesign: {
+          "shaitee-001": 103000,
+          "shaitee-002": 88000,
+        },
+      },
+      {
+        id: "30s",
+        label: "Cotton Combed 30s — Kaos",
+        price: 95000,
+        modalByDesign: {
+          "shaitee-001": 84000,
+          "shaitee-002": 69000,
+        },
+      },
     ],
   },
 
@@ -81,7 +125,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "TOTEBAG",
     title: "ShaiBag — Totebag Official SHAinni",
     price: 60000,
-    modal: 1000,
+    modal: 45000,
     description:
       "Totebag harian dengan desain official SHAinni, tersedia 3 pilihan desain.",
     designs: [
@@ -110,7 +154,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "MUG",
     title: "ShaiMug — Mug Official SHAinni",
     price: 35000,
-    modal: 1000,
+    modal: 25000,
     description:
       "Mug keramik dengan artwork SHAinni, tersedia 2 pilihan desain.",
     designs: [
@@ -134,7 +178,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "TUMBLER",
     title: "SHAinni — Tumbler Official",
     price: 120000,
-    modal: 1000,
+    modal: 105000,
     description: "Botol minum stainless, tersedia 2 pilihan desain.",
     designs: [
       {
@@ -157,7 +201,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "KEYCHAIN",
     title: "Keychain Official SHAinni",
     price: 17000,
-    modal: 1000,
+    modal: 13000,
     description: "Gantungan kunci akrilik, tersedia 26 pilihan desain.",
     designs: [
       { id: "banana", label: "Banana", image: `${MERCH}/KEYCHAIN/banana.png` },
@@ -236,7 +280,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "PIN",
     title: "Pin Official SHAinni",
     price: 15000,
-    modal: 1000,
+    modal: 10000,
     description: "Pin akrilik/emblem, tersedia 26 pilihan warna & desain.",
     designs: [
       { id: "blue1", label: "Blue 1", image: `${MERCH}/PIN/blue1.png` },
@@ -275,7 +319,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "STICKER",
     title: "Sticker Official SHAinni",
     price: 10000,
-    modal: 1000,
+    modal: 3750,
     description: "Sticker vinyl program SHAinni, tersedia 6 pilihan desain.",
     designs: [
       {
@@ -314,7 +358,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "PAPER BAG",
     title: "Paper Bag SHAinni",
     price: 3500,
-    modal: 1000,
+    modal: 3000, // TODO: belum ada di tabel modal kamu, ganti kalau ada angkanya
     description: "Tas kertas buat bungkus belanjaan kamu, opsional.",
     designs: [{ id: "default", label: "Default", image: `${MERCH}/paper.png` }],
   },
@@ -326,9 +370,9 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "BUNDLING A",
     title: "Bundling A — T-Shirt + Keychain + Sticker",
     price: 120000,
-    modal: 1000,
+    modal: 106000, // default: kaos 24s desain 1 (biru)
     description:
-      "Paket hemat: 1 T-Shirt (pilih desain, bahan & ukuran), 1 Keychain (pilih desain), 1 Sticker (pilih desain).",
+      "Paket hemat: 1 T-Shirt (pilih desain, bahan & ukuran — kaos atau long sleeve), 1 Keychain (pilih desain), 1 Sticker (pilih desain).",
     designs: [
       {
         id: "default",
@@ -342,6 +386,21 @@ export const PRODUCTS: Product[] = [
       { productSlug: "keychain", label: "Keychain", quantity: 1 },
       { productSlug: "sticker", label: "Sticker", quantity: 1 },
     ],
+    // Key = `${materialId}_${designId}` dari kaos yang dipilih dalam bundle
+    variantModal: {
+      "24s_shaitee-001": 106000, // Bundle A Biru (24s)
+      "30s_shaitee-001": 101000, // Bundle A Biru (30s)
+      "24s_shaitee-002": 91000, // Bundle A Color (24s)
+      "30s_shaitee-002": 86000, // Bundle A Color (30s)
+      "24s-ls_shaitee-001": 119750, // Bundle A Long Sleeve (biru)
+      "24s-ls_shaitee-002": 104750, // Bundle A Long Sleeve (warna)
+    },
+    // Key = materialId kaos yang dipilih (harga nggak beda per desain, cuma per bahan)
+    variantPrice: {
+      "24s": 120000,
+      "30s": 120000,
+      "24s-ls": 135000, // long sleeve bikin harga bundle naik jadi 135rb
+    },
   },
   {
     slug: "bundling-b",
@@ -349,7 +408,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "BUNDLING B",
     title: "Bundling B — Tumbler + Sticker + Pin",
     price: 135000,
-    modal: 1000,
+    modal: 123750,
     description:
       "Paket hemat: 1 Tumbler (pilih desain), 1 Sticker (pilih desain), 1 Pin (pilih desain).",
     designs: [
@@ -372,7 +431,7 @@ export const PRODUCTS: Product[] = [
     categoryLabel: "BUNDLING C",
     title: "Bundling C — Totebag + Pin + Keychain",
     price: 80000,
-    modal: 1000,
+    modal: 68000,
     description:
       "Paket hemat: 1 Totebag (pilih desain), 1 Pin (pilih desain), 1 Keychain (pilih desain).",
     designs: [
@@ -408,3 +467,63 @@ export const CATEGORY_COVER: Record<string, string> = {
   pin: `${MERCH}/PINSS.png`,
   sticker: `${MERCH}/STICKERSS.png`,
 };
+
+/**
+ * Ambil modal (HPP) efektif untuk sebuah produk, dengan mempertimbangkan
+ * desain & bahan yang dipilih (kalau ada override-nya).
+ * Fallback ke `product.modal` kalau kombinasi desain+bahan nggak punya override.
+ */
+export function getModal(
+  product: Product,
+  opts: { designId?: string; materialId?: string } = {},
+): number {
+  const material =
+    product.materials?.find((m) => m.id === opts.materialId) ??
+    product.materials?.[0];
+
+  if (
+    material?.modalByDesign &&
+    opts.designId &&
+    material.modalByDesign[opts.designId] != null
+  ) {
+    return material.modalByDesign[opts.designId];
+  }
+
+  return product.modal;
+}
+
+/**
+ * Khusus produk bundle: ambil modal berdasarkan bahan+desain dari item
+ * utama bundle (misalnya kaos di Bundling A). Fallback ke `product.modal`
+ * kalau bundle-nya nggak punya variantModal atau kombinasinya nggak ketemu.
+ */
+export function getBundleVariantModal(
+  product: Product,
+  materialId?: string,
+  designId?: string,
+): number {
+  if (product.variantModal && materialId && designId) {
+    const key = `${materialId}_${designId}`;
+    if (product.variantModal[key] != null) {
+      return product.variantModal[key];
+    }
+  }
+  return product.modal;
+}
+
+/**
+ * Khusus produk bundle: ambil harga jual berdasarkan bahan yang dipilih
+ * dari item utama bundle (misalnya kaos di Bundling A). Fallback ke
+ * `product.price` kalau bundle-nya nggak punya variantPrice atau
+ * bahannya nggak ketemu di daftar override.
+ */
+export function getBundlePrice(product: Product, materialId?: string): number {
+  if (
+    product.variantPrice &&
+    materialId &&
+    product.variantPrice[materialId] != null
+  ) {
+    return product.variantPrice[materialId];
+  }
+  return product.price;
+}

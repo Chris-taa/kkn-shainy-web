@@ -12,7 +12,7 @@ import {
   ImageIcon,
   PackageCheck,
 } from "lucide-react";
-import { PRODUCTS, type Product } from "@/data/products";
+import { PRODUCTS, getBundlePrice, type Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { formatRupiah } from "@/lib/format";
 
@@ -75,6 +75,20 @@ export default function ProductDetail({ product }: { product: Product }) {
   const activeMaterial = product.materials?.find((m) => m.id === materialId);
   const activePrice = activeMaterial ? activeMaterial.price : product.price;
 
+  /**
+   * Untuk bundle, harga jual bisa berubah tergantung bahan item utama
+   * (misalnya kaos long sleeve di Bundling A bikin harga naik ke 135rb).
+   * `variantPrice` di data produk pakai key = materialId komponen utama
+   * (komponen pertama di bundleComponents, biasanya shirt).
+   */
+  const primaryBundleComponent = bundleComponentProducts[0];
+  const primaryBundleSelection = primaryBundleComponent
+    ? bundleSelections[primaryBundleComponent.productSlug]
+    : undefined;
+  const bundlePrice = isBundle
+    ? getBundlePrice(product, primaryBundleSelection?.materialId)
+    : product.price;
+
   const handleAddToCart = () => {
     if (isBundle) {
       // Gabungin semua pilihan desain per item jadi 1 teks catatan,
@@ -107,7 +121,7 @@ export default function ProductDetail({ product }: { product: Product }) {
           slug: product.slug,
           title: product.title,
           image: product.designs[0].image,
-          price: product.price,
+          price: bundlePrice,
           design: designSummary,
         },
         quantity,
@@ -185,7 +199,7 @@ export default function ProductDetail({ product }: { product: Product }) {
             {product.title}
           </h1>
           <p className="mt-2 font-pixel text-2xl text-sunny [text-shadow:2px_2px_0_#0D2B4E]">
-            {formatRupiah(isBundle ? product.price : activePrice)}
+            {formatRupiah(isBundle ? bundlePrice : activePrice)}
           </p>
           <p className="mt-3 font-body text-sm text-navy/70">
             {product.description}
