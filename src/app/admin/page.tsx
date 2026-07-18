@@ -14,8 +14,6 @@ import {
   TrendingUp,
   Download,
   PackageOpen,
-  Trash2,
-  AlertTriangle,
 } from "lucide-react";
 import { exportFinanceExcel } from "@/lib/exportExcel";
 import { buildItemRecap } from "@/lib/financeUtils";
@@ -43,8 +41,6 @@ export default function AdminFinancePage() {
   const [filter, setFilter] = useState<"all" | OrderStatus>("verified");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
 
   const fetchOrders = useCallback(async () => {
     setLoadingOrders(true);
@@ -118,34 +114,6 @@ export default function AdminFinancePage() {
       orders: filteredOrders,
       recap,
     });
-  };
-
-  const requestDelete = (order: Order) => {
-    if (order.status !== "rejected") return;
-    setOrderToDelete(order);
-  };
-
-  const cancelDelete = () => {
-    if (deletingId) return; // jangan bisa dibatalkan saat sedang proses
-    setOrderToDelete(null);
-  };
-
-  const confirmDelete = async () => {
-    if (!orderToDelete) return;
-
-    setDeletingId(orderToDelete.id);
-    const { error } = await supabase
-      .from("checkouts")
-      .delete()
-      .eq("id", orderToDelete.id);
-
-    if (error) {
-      alert("Gagal menghapus data: " + error.message);
-    } else {
-      setOrders((prev) => prev.filter((o) => o.id !== orderToDelete.id));
-    }
-    setDeletingId(null);
-    setOrderToDelete(null);
   };
 
   if (checking) {
@@ -282,7 +250,7 @@ export default function AdminFinancePage() {
             </div>
           ) : (
             <div className="neo-card overflow-x-auto rounded-3xl bg-white p-5 sm:p-6">
-              <table className="w-full min-w-[800px] border-collapse text-left">
+              <table className="w-full min-w-[720px] border-collapse text-left">
                 <thead>
                   <tr className="border-b-[3px] border-dashed border-navy/15">
                     <th className="py-2 pr-3 font-body text-xs font-semibold uppercase text-navy/50">
@@ -297,11 +265,8 @@ export default function AdminFinancePage() {
                     <th className="py-2 pr-3 text-right font-body text-xs font-semibold uppercase text-navy/50">
                       Total Payment
                     </th>
-                    <th className="py-2 pr-3 text-right font-body text-xs font-semibold uppercase text-navy/50">
+                    <th className="py-2 text-right font-body text-xs font-semibold uppercase text-navy/50">
                       Keuntungan
-                    </th>
-                    <th className="py-2 pl-3 text-right font-body text-xs font-semibold uppercase text-navy/50">
-                      Aksi
                     </th>
                   </tr>
                 </thead>
@@ -346,25 +311,8 @@ export default function AdminFinancePage() {
                         <td className="py-3 pr-3 text-right font-body text-sm font-semibold text-navy">
                           {formatRupiah(order.total_price)}
                         </td>
-                        <td className="py-3 pr-3 text-right font-body text-sm font-bold text-navy">
+                        <td className="py-3 text-right font-body text-sm font-bold text-navy">
                           {formatRupiah(keuntungan)}
-                        </td>
-                        <td className="py-3 pl-3 text-right">
-                          {order.status === "rejected" && (
-                            <button
-                              type="button"
-                              onClick={() => requestDelete(order)}
-                              disabled={deletingId === order.id}
-                              className="inline-flex items-center gap-1 rounded-full border-[3px] border-navy bg-coral px-2.5 py-1 font-body text-xs font-semibold text-white disabled:opacity-50"
-                            >
-                              {deletingId === order.id ? (
-                                <Loader2 size={12} className="animate-spin" />
-                              ) : (
-                                <Trash2 size={12} />
-                              )}
-                              Hapus
-                            </button>
-                          )}
                         </td>
                       </tr>
                     );
@@ -375,61 +323,6 @@ export default function AdminFinancePage() {
           )}
         </div>
       </div>
-
-      {/* Modal konfirmasi hapus (custom, matching tema) */}
-      {orderToDelete && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-navy/50 px-4"
-          role="dialog"
-          aria-modal="true"
-          onClick={cancelDelete}
-        >
-          <div
-            className="neo-card w-full max-w-sm rounded-3xl border-[3px] border-navy bg-white p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-[3px] border-navy bg-coral text-white">
-                <AlertTriangle size={18} />
-              </div>
-              <h2 className="font-pixel text-base text-navy">Hapus Pesanan?</h2>
-            </div>
-
-            <p className="mt-4 font-body text-sm text-navy/70">
-              Pesanan{" "}
-              <span className="font-bold text-navy">
-                &quot;{orderToDelete.nama}&quot;
-              </span>{" "}
-              ({orderToDelete.order_id}) akan dihapus permanen. Aksi ini tidak
-              bisa dibatalkan.
-            </p>
-
-            <div className="mt-6 flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={cancelDelete}
-                disabled={!!deletingId}
-                className="rounded-full border-[3px] border-navy bg-white px-4 py-2 font-body text-xs font-semibold text-navy disabled:opacity-50"
-              >
-                Batal
-              </button>
-              <button
-                type="button"
-                onClick={confirmDelete}
-                disabled={!!deletingId}
-                className="flex items-center gap-2 rounded-full border-[3px] border-navy bg-coral px-4 py-2 font-body text-xs font-semibold text-white disabled:opacity-50"
-              >
-                {deletingId ? (
-                  <Loader2 size={14} className="animate-spin" />
-                ) : (
-                  <Trash2 size={14} />
-                )}
-                Ya, Hapus
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
