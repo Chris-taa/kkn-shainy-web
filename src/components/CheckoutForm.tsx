@@ -24,9 +24,9 @@ export default function CheckoutForm() {
   const [noHp, setNoHp] = useState("");
   const [proofFile, setProofFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
-    "idle"
-  );
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [orderId, setOrderId] = useState("");
 
@@ -96,7 +96,7 @@ export default function CheckoutForm() {
     } catch (err) {
       setStatus("error");
       setErrorMsg(
-        err instanceof Error ? err.message : "Gagal memproses checkout."
+        err instanceof Error ? err.message : "Gagal memproses checkout.",
       );
     }
   };
@@ -123,9 +123,7 @@ export default function CheckoutForm() {
         <div className="neo-shadow-sm flex h-16 w-16 items-center justify-center rounded-full border-[3px] border-navy bg-mint">
           <PartyPopper size={28} className="text-navy" />
         </div>
-        <h2 className="mt-2 font-pixel text-xl text-navy">
-          Pesanan Diterima!
-        </h2>
+        <h2 className="mt-2 font-pixel text-xl text-navy">Pesanan Diterima!</h2>
         <p className="font-body text-sm text-navy/70">
           Order ID kamu:{" "}
           <span className="font-pixel text-sunny [text-shadow:1px_1px_0_#0D2B4E]">
@@ -133,8 +131,8 @@ export default function CheckoutForm() {
           </span>
         </p>
         <p className="mt-1 font-body text-xs text-navy/50">
-          Bukti pembayaran udah kami terima. Admin bakal verifikasi &amp;
-          hubungi kamu lewat nomor HP yang kamu isi.
+          Bukti pembayaran udah kami terima. Admin bakal verifikasi, Terimakasih
+          yaa &amp;
         </p>
         <Link
           href="/store"
@@ -168,7 +166,8 @@ export default function CheckoutForm() {
                 </div>
                 <div className="flex-1">
                   <p className="font-body text-sm font-semibold text-navy">
-                    {item.title} <span className="text-navy/50">x{item.quantity}</span>
+                    {item.title}{" "}
+                    <span className="text-navy/50">x{item.quantity}</span>
                   </p>
                   {variant && (
                     <p className="font-body text-xs text-navy/50">{variant}</p>
@@ -191,7 +190,9 @@ export default function CheckoutForm() {
 
       {/* Pilih metode pembayaran */}
       <div className="neo-card rounded-3xl bg-white p-6 sm:p-8">
-        <h2 className="font-pixel text-base text-navy">Pilih Metode Pembayaran</h2>
+        <h2 className="font-pixel text-base text-navy">
+          Pilih Metode Pembayaran
+        </h2>
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
           {PAYMENT_METHODS.map((method) => (
             <button
@@ -204,7 +205,9 @@ export default function CheckoutForm() {
                   : "bg-white"
               }`}
             >
-              <span className="font-pixel text-xs text-navy">{method.label}</span>
+              <span className="font-pixel text-xs text-navy">
+                {method.label}
+              </span>
             </button>
           ))}
         </div>
@@ -235,8 +238,8 @@ export default function CheckoutForm() {
           </button>
         </div>
         <p className="mt-3 font-body text-xs text-navy/50">
-          Transfer sesuai total di atas ke nomor {activePayment.label} ini,
-          lalu upload screenshot bukti transfernya di bawah.
+          Transfer sesuai total di atas ke nomor {activePayment.label} ini, lalu
+          upload screenshot bukti transfernya di bawah.
         </p>
       </div>
 
