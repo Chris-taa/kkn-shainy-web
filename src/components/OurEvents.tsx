@@ -42,25 +42,45 @@ export default function OurEvents() {
 
   useEffect(() => {
     let isMounted = true;
+    let isFetching = false; // Mencegah fetch ganda (terutama saat spam ganti tab)
 
     async function fetchEventData() {
-      const { data: eventRow } = await supabase
-        .from("events")
-        .select("status, capacity")
-        .eq("title", CLOSING_CEREMONY_TITLE)
-        .single();
+      if (isFetching) return;
+      isFetching = true;
 
-      if (eventRow && isMounted) {
-        setStatus(eventRow.status as EventStatus);
-        setCapacity(eventRow.capacity ?? 0);
+      try {
+        // Ambil kapasitas dan jumlah pendaftar secara BERSAMAAN biar lebih ngebut
+        const [eventRes, regRes] = await Promise.all([
+          supabase
+            .from("events")
+            .select("status, capacity")
+            .eq("title", CLOSING_CEREMONY_TITLE)
+            .single(),
+          supabase
+            .from("registrations")
+            .select("*", { count: "exact", head: true })
+            .eq("event_title", CLOSING_CEREMONY_TITLE),
+        ]);
+
+        if (isMounted) {
+          // Set kapasitas jika data event ditemukan
+          if (eventRes.data) {
+            setStatus(eventRes.data.status as EventStatus);
+            setCapacity(eventRes.data.capacity ?? 0);
+          }
+
+          // Set pendaftar HANYA jika tidak ada error dari Supabase dan count tidak null
+          if (!regRes.error && regRes.count !== null) {
+            setRegisteredCount(regRes.count);
+          } else if (regRes.error) {
+            console.error("Gagal mengambil data pendaftar:", regRes.error);
+            // Angka pendaftar akan tetap null (menampilkan "Loading..." di UI)
+            // sehingga tidak memunculkan informasi salah "0/350"
+          }
+        }
+      } finally {
+        isFetching = false;
       }
-
-      const { count } = await supabase
-        .from("registrations")
-        .select("*", { count: "exact", head: true })
-        .eq("event_title", CLOSING_CEREMONY_TITLE);
-
-      if (isMounted) setRegisteredCount(count ?? 0);
     }
 
     fetchEventData();
@@ -177,3 +197,4 @@ export default function OurEvents() {
     </section>
   );
 }
+  

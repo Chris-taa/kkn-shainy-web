@@ -5,9 +5,10 @@ import Navbar from "@/components/Navbar";
 
 export default function ConditionalNavbar() {
   const pathname = usePathname();
-  const isAdmin = pathname?.startsWith("/admin");
+  const isBackoffice =
+    pathname?.startsWith("/admin") || pathname?.startsWith("/committee");
 
-  if (isAdmin) return null;
+  if (isBackoffice) return null;
 
   return <Navbar />;
 }
